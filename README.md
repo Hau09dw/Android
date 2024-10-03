@@ -1,4 +1,4 @@
-# Creator: TRAN TRUNG HAU, NGUYEN THE MINH, NGO NGUYEN VIET ANH
+# Members: TRAN TRUNG HAU, NGUYEN THE MINH, NGO NGUYEN VIET ANH
 # Langugue: Java
 # IDE: Android Studio
 # Startdate: sep/24/2024
