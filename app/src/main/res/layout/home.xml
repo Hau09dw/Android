@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".MainActivity">
+    tools:context=".UI.MainActivity">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -41,7 +41,7 @@
                     android:padding="10dp"
                     android:text="@string/home_title"
                     android:textColor="@color/black"
-                    android:textSize="44sp"
+                    android:textSize="40sp"
                     android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="@id/id_home_title"
                     app:layout_constraintHorizontal_bias="0.0"
@@ -147,7 +147,9 @@
                 android:id="@+id/id_recyclerview"
                 android:layout_width="match_parent"
                 android:layout_height="540dp"
-                android:layout_margin="10dp" />
+                android:layout_margin="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
         </LinearLayout>
     </ScrollView>
 
@@ -191,6 +193,7 @@
                         android:layout_marginTop="8dp"
                         android:text="@string/back"
                         android:textAlignment="center" />
+
                 </LinearLayout>
 
                 <LinearLayout

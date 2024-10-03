@@ -1,4 +1,4 @@
-package com.example.project_management_g1;
+package com.example.project_management_g1.UI;
 
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
@@ -10,6 +10,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+
+import com.example.project_management_g1.DATA.CreateDatabase;
+import com.example.project_management_g1.R;
 
 public class MainActivity extends AppCompatActivity {
     View home_title;
@@ -23,7 +26,8 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-
+        CreateDatabase createDatabase = new CreateDatabase(this);
+        createDatabase.open();
     }
     public void createDynamicGradient() {
         GradientDrawable gradientDrawable = new GradientDrawable(
