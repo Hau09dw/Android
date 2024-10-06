@@ -27,7 +27,7 @@
                 <View
                     android:id="@+id/id_home_title"
                     android:layout_width="0dp"
-                    android:layout_height="150dp"
+                    android:layout_height="130dp"
                     android:background="@drawable/ic_gradient_background"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
@@ -41,7 +41,7 @@
                     android:padding="10dp"
                     android:text="@string/home_title"
                     android:textColor="@color/black"
-                    android:textSize="40sp"
+                    android:textSize="30sp"
                     android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="@id/id_home_title"
                     app:layout_constraintHorizontal_bias="0.0"
@@ -51,7 +51,7 @@
                 <EditText
                     android:id="@+id/editTextText"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
+                    android:layout_height="30dp"
                     android:layout_margin="15dp"
                     android:background="@drawable/ic_custom_search"
                     android:drawableStart="@drawable/search"
@@ -61,7 +61,7 @@
                     android:paddingLeft="@dimen/_10dp"
                     android:text=""
                     android:textColor="@color/black"
-                    android:textSize="25sp"
+                    android:textSize="15sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/editText" />
@@ -84,7 +84,7 @@
                     android:text="@string/task_name"
                     android:textColor="#F44336"
                     android:textStyle="bold"
-                    android:textSize="20sp"
+                    android:textSize="15sp"
                     />
 
                 <LinearLayout
@@ -100,7 +100,7 @@
                         android:text="@string/assignee"
                         android:textColor="#0091EA"
                         android:textStyle="bold"
-                        android:textSize="20sp"
+                        android:textSize="15sp"
                         />
 
                     <TextView
@@ -110,7 +110,7 @@
                         android:textColor="#FFEB3B"
                         android:text="@string/startdate"
                         android:textStyle="bold"
-                        android:textSize="20sp"/>
+                        android:textSize="15sp"/>
 
                 </LinearLayout>
 
@@ -128,7 +128,7 @@
                         android:text="@string/estimate_day"
                         android:textColor="#76FF03"
                         android:textStyle="bold"
-                        android:textSize="20sp"
+                        android:textSize="15sp"
                         />
 
                     <TextView
@@ -138,7 +138,7 @@
                         android:textColor="#FFEB3B"
                         android:text="@string/end_date"
                         android:textStyle="bold"
-                        android:textSize="20sp"
+                        android:textSize="15sp"
                         />
                 </LinearLayout>
             </LinearLayout>
