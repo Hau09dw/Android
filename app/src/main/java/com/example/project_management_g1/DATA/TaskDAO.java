@@ -1,6 +1,5 @@
 package com.example.project_management_g1.DATA;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
