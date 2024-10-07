@@ -30,8 +30,8 @@ public class CreateDatabase extends SQLiteOpenHelper {
                 + TB_DevTask_Id + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + TB_DevTask_DEVName + " TEXT, "
                 + TB_DevTask_TaskID + " INTEGER, "
-                + TB_DevTask_StartDate + " TEXT, "
-                + TB_DevTask_EndDate + " TEXT );";
+                + TB_DevTask_StartDate + " DATETIME, "
+                + TB_DevTask_EndDate + " DATETIME );";
         String tbTask = "CREATE TABLE "+ TB_Task + "( "
                 + TB_Task_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + TB_Task_TaskName + " TEXT, "

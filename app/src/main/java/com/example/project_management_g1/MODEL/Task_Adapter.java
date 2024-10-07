@@ -36,7 +36,7 @@ public class Task_Adapter  extends RecyclerView.Adapter<Task_Adapter.TaskViewHol
         if(task == null) return;
         holder.taskname_.setText(task.getTask_name());
         holder.assignee_.setText(task.getAssignee());
-        holder.estimateday_.setText(String.valueOf(task.getEstimaday())+ " days");
+        holder.estimateday_.setText(task.getEstimaday() + " days");
         holder.startdate_.setText(task.getStartdate());
         holder.enddate_.setText(task.getEnddate());
         }
