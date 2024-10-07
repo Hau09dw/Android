@@ -21,6 +21,10 @@ public class Task_Adapter  extends RecyclerView.Adapter<Task_Adapter.TaskViewHol
     public Task_Adapter(List<Task> tasklist){
         this.tasklist = tasklist;
     }
+    public void setFilteredList(List<Task> filteredList){
+        this.tasklist = filteredList;
+        notifyDataSetChanged();
+    }
     // tao view
     @NonNull
     @Override

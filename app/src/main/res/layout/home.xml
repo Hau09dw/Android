@@ -48,23 +48,20 @@
                     app:layout_constraintStart_toStartOf="@id/id_home_title"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <EditText
-                    android:id="@+id/editTextText"
-                    android:layout_width="match_parent"
-                    android:layout_height="30dp"
-                    android:layout_margin="15dp"
+                <androidx.appcompat.widget.SearchView
+                    android:id="@+id/action_search"
+                    android:layout_width="0dp"
+                    android:layout_height="35dp"
+                    android:layout_margin="4dp"
                     android:background="@drawable/ic_custom_search"
-                    android:drawableStart="@drawable/search"
-                    android:drawablePadding="10dp"
-                    android:hint="@string/search"
-                    android:inputType="text"
-                    android:paddingLeft="@dimen/_10dp"
-                    android:text=""
-                    android:textColor="@color/black"
-                    android:textSize="15sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/id_home_title"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="1.0"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/editText" />
+                    app:layout_constraintTop_toBottomOf="@+id/editText"
+                    app:queryHint="Search..."
+                    app:iconifiedByDefault="false"
+                    />
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>
