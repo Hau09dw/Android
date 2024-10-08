@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/bottom_back_id"
+        android:title="Back"
+
+        android:icon="@drawable/back"/>
+
+    <item
+        android:id="@+id/bottom_home_id"
+        android:title="Home"
+        android:icon="@drawable/home"
+        />
+
+    <item
+        android:title=""
+       />
+
+    <item
+        android:id="@+id/bottom_setting_id"
+        android:title="Setting"
+        android:icon="@drawable/setting" />
+    <item
+        android:id="@+id/bottom_ganttchart_id"
+        android:title="Gantt Chart"
+        android:icon="@drawable/ganttchart" />
+
+</menu>
