@@ -28,39 +28,23 @@ public class BackgroundMusicService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if (intent != null && intent.getAction() != null) {
-            switch (intent.getAction()) {
-                case "PLAY":
-                    playMusic();
-                    break;
-                case "PAUSE":
-                    pauseMusic();
-                    break;
-                case "STOP":
-                    stopMusic();
-                    break;
-            }
-        }
         return START_STICKY;
+    }
+
+    @Override
+    public IBinder onBind(Intent intent) {
+        return binder;
     }
 
     public void playMusic() {
         if (!mediaPlayer.isPlaying()) {
             mediaPlayer.start();
-            Toast.makeText(this, "Music started!", Toast.LENGTH_SHORT).show();
         }
     }
 
     public void pauseMusic() {
         if (mediaPlayer.isPlaying()) {
             mediaPlayer.pause();
-            Toast.makeText(this, "Music stopped!", Toast.LENGTH_SHORT).show();
-        }
-    }
-    public void stopMusic() {
-        if (mediaPlayer.isPlaying()) {
-            mediaPlayer.stop();
-            Toast.makeText(this, "Music stopped!", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -68,15 +52,12 @@ public class BackgroundMusicService extends Service {
     public void onDestroy() {
         super.onDestroy();
         if (mediaPlayer != null) {
-            mediaPlayer.stop();
             mediaPlayer.release();
             mediaPlayer = null;
-            Toast.makeText(this, "Music stopped!", Toast.LENGTH_SHORT).show();
         }
     }
-
-    @Override
-    public IBinder onBind(Intent intent) {
-        return binder;
+    public boolean isPlaying() {
+        return mediaPlayer != null && mediaPlayer.isPlaying();
     }
+
 }

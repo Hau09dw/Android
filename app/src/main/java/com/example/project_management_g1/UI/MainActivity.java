@@ -3,11 +3,19 @@ package com.example.project_management_g1.UI;
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -15,10 +23,12 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.graphics.Insets;
@@ -32,7 +42,10 @@ import com.example.project_management_g1.DATA.TaskDAO;
 import com.example.project_management_g1.MODEL.Task;
 import com.example.project_management_g1.MODEL.Task_Adapter;
 import com.example.project_management_g1.R;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationBarView;
+import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +59,13 @@ public class MainActivity extends AppCompatActivity {
     private FloatingActionButton fab;
     private ImageView cancelButton;
 
+    private BackgroundMusicService musicService;
+    private boolean isBound = false;
+    private Switch musicSwitch;
+    private static final String PREFS_NAME = "MusicPrefs";
+    private static final String MUSIC_STATE = "MusicState";
+    private BottomNavigationView bottomNavigationView;
+    private boolean wasPlayingBeforePause = false;
 
     TextView txt_startdate, txt_enddate;
     ImageButton btnStartdate, btnEnddate;
@@ -76,8 +96,25 @@ public class MainActivity extends AppCompatActivity {
                 showBottomDialog();
             }
         });
+        //Music Service
+        Intent intent = new Intent(this, BackgroundMusicService.class);
+        bindService(intent, connection, Context.BIND_AUTO_CREATE);
 
+        bottomNavigationView = findViewById(R.id.bottomNavigationView);
+        bottomNavigationView.setBackground(null);
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            int itemId = item.getItemId();
 
+            if (itemId == R.id.bottom_home_id) {
+                return true;
+            } else if (itemId == R.id.bottom_setting_id) {
+                showSettingsDialog();
+                return true;
+            } else if (itemId == R.id.bottom_ganttchart_id) {
+                return true;
+            }
+            return false;
+        });
     }
 
     private void initializeViews() {
@@ -195,4 +232,111 @@ public class MainActivity extends AppCompatActivity {
             dialog.show();
 
     }
+
+    // Settings Task
+    private ServiceConnection connection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName className, IBinder service) {
+            BackgroundMusicService.LocalBinder binder = (BackgroundMusicService.LocalBinder) service;
+            musicService = binder.getService();
+            isBound = true;
+
+            // Check saved state and play music if it was on
+            if (getMusicState()) {
+                musicService.playMusic();
+            }
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName arg0) {
+            isBound = false;
+        }
+    };
+    private void showSettingsDialog()
+    {
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.setting);
+        dialog.setCanceledOnTouchOutside(true);
+
+        musicSwitch = dialog.findViewById(R.id.musicSwitch);
+        if (musicSwitch != null) {
+            musicSwitch.setChecked(getMusicState());
+            musicSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                if (isBound) {
+                    if (isChecked) {
+                        musicService.playMusic();
+                    } else {
+                        musicService.pauseMusic();
+                    }
+                    saveMusicState(isChecked);
+                }
+            });
+        } else {
+            Log.e("MainActivity", "musicSwitch not found in settings layout");
+        }
+
+
+        cancelButton = dialog.findViewById(R.id.cancelMusicButton);
+        if (cancelButton != null) {
+            cancelButton.setOnClickListener(view -> dialog.dismiss());
+        } else {
+            Log.e("MainActivity", "cancelButton not found in settings layout");
+            // Thêm một cách khác để đóng dialog nếu nút cancel không tồn tại
+            dialog.setOnCancelListener(dialogInterface -> dialogInterface.dismiss());
+        }
+
+        Window window = dialog.getWindow();
+        if (window != null) {
+            window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT);
+            window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            window.getAttributes().windowAnimations = R.style.DialogAnimation;
+            window.setGravity(Gravity.BOTTOM);
+        }
+
+        dialog.show();
+    }
+    private boolean getMusicState() {
+        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        return settings.getBoolean(MUSIC_STATE, false); // false is the default value
+    }
+
+    private void saveMusicState(boolean state) {
+        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putBoolean(MUSIC_STATE, state);
+        editor.apply();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (isBound && musicService.isPlaying()) {
+            musicService.pauseMusic();
+            wasPlayingBeforePause = true;
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (isBound && getMusicState() && wasPlayingBeforePause) {
+            musicService.playMusic();
+            wasPlayingBeforePause = false;
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (isBound) {
+            musicService.pauseMusic(); // Đảm bảo nhạc được tạm dừng khi ứng dụng bị hủy
+            unbindService(connection);
+            isBound = false;
+        }
+    }
+
+
+
 }

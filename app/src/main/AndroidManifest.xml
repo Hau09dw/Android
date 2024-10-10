@@ -21,10 +21,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".UI.SettingActivity"
-            android:exported="false">
-        </activity>
-        <service android:name=".UI.BackgroundMusicService" />
+
+        <service android:name=".UI.BackgroundMusicService" android:enabled="true"
+            android:exported="false" />
     </application>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.INTERNET" />
