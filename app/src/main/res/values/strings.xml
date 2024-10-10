@@ -12,4 +12,14 @@
     <string name="chart">Chart</string>
     <string name="back">back</string>
     <string name="add">Add</string>
+    <string name="task_name_create">Task Name</string>
+    <string name="assignee_create">Assignee</string>
+    <string name="estimateday_create">Estimate Day</string>
+    <string name="startdate_create">Start Date</string>
+    <string name="enddate_create">End Date</string>
+    <string name="ex_order_list">ex: Order list,..</string>
+    <string name="ex_kaushik">ex: kaushik,..</string>
+    <string name="ex_5">ex: 5,..</string>
+    <string name="confirm">CONFIRM</string>
+    <string name="ex_yyyy_mm_dd">ex: YYYY/MM/dd</string>
 </resources>

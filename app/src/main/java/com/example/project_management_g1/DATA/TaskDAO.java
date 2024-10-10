@@ -1,5 +1,6 @@
 package com.example.project_management_g1.DATA;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -17,6 +18,10 @@ public class TaskDAO {
         dbHelper = new CreateDatabase(context);// khoi tao csdl
     }
 
+
+//    public long addTask(Task task){
+//        ContentValues values = new ContentValues();
+//    }
     public List<Task> getAllTasks() {
         List<Task> listTasks = new ArrayList<>();
         db = dbHelper.getReadableDatabase();

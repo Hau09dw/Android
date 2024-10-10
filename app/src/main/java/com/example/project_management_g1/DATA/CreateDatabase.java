@@ -37,20 +37,20 @@ public class CreateDatabase extends SQLiteOpenHelper {
                 + TB_Task_TaskName + " TEXT, "
                 + TB_Task_EstimateDay + " INTEGER );";
         String insertQuery1 = "INSERT INTO " + TB_DevTask + " (" + TB_DevTask_DEVName + ", " + TB_DevTask_TaskID + ", " + TB_DevTask_StartDate + ", " + TB_DevTask_EndDate + ") " +
-                "VALUES('Ramesh', 3, '2024-5-1', '2024-5-3');";
+                "VALUES('Ramesh', 3, '2024/5/1', '2024/5/3');";
 
-        String insertQuery2 = "INSERT INTO " + TB_DevTask + " (" + TB_DevTask_DEVName + ", " + TB_DevTask_TaskID + ", " + TB_DevTask_StartDate + ", " + TB_DevTask_EndDate + ") " +
-                "VALUES('Khilan', 2, '2024-5-2', '2024-5-4');";
-
-        String insertQuery3 = "INSERT INTO " + TB_DevTask + " (" + TB_DevTask_DEVName + ", " + TB_DevTask_TaskID + ", " + TB_DevTask_StartDate + ", " + TB_DevTask_EndDate + ") " +
-                "VALUES('Kaushik', 1, '2024-4-28', '2024-4-30');";
-
-        String insertQuery4 = "INSERT INTO " + TB_DevTask + " (" + TB_DevTask_DEVName + ", " + TB_DevTask_TaskID + ", " + TB_DevTask_StartDate + ", " + TB_DevTask_EndDate + ") " +
-                "VALUES('Kaushik', 4, '2024-5-6', '2024-5-8');";
-
-        String insertQuery5 = "INSERT INTO " + TB_DevTask + " (" + TB_DevTask_DEVName + ", " + TB_DevTask_TaskID + ", " + TB_DevTask_StartDate + ", " + TB_DevTask_EndDate + ") " +
-                "VALUES('Superman', 5, '2024-5-3', '2024-5-5');";
-
+//        String insertQuery2 = "INSERT INTO " + TB_DevTask + " (" + TB_DevTask_DEVName + ", " + TB_DevTask_TaskID + ", " + TB_DevTask_StartDate + ", " + TB_DevTask_EndDate + ") " +
+//                "VALUES('Khilan', 2, '2024-5-2', '2024-5-4');";
+//
+//        String insertQuery3 = "INSERT INTO " + TB_DevTask + " (" + TB_DevTask_DEVName + ", " + TB_DevTask_TaskID + ", " + TB_DevTask_StartDate + ", " + TB_DevTask_EndDate + ") " +
+//                "VALUES('Kaushik', 1, '2024-4-28', '2024-4-30');";
+//
+//        String insertQuery4 = "INSERT INTO " + TB_DevTask + " (" + TB_DevTask_DEVName + ", " + TB_DevTask_TaskID + ", " + TB_DevTask_StartDate + ", " + TB_DevTask_EndDate + ") " +
+//                "VALUES('Kaushik', 4, '2024-5-6', '2024-5-8');";
+//
+//        String insertQuery5 = "INSERT INTO " + TB_DevTask + " (" + TB_DevTask_DEVName + ", " + TB_DevTask_TaskID + ", " + TB_DevTask_StartDate + ", " + TB_DevTask_EndDate + ") " +
+//                "VALUES('Superman', 5, '2024-5-3', '2024-5-5');";
+//
         String insertQuery6 = "INSERT INTO " + TB_Task + " (" + TB_Task_TaskName + ", " + TB_Task_EstimateDay + ") " +
                 "VALUES('Order list', 5);";
 
@@ -71,10 +71,10 @@ public class CreateDatabase extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL(tbTask);
 
         sqLiteDatabase.execSQL(insertQuery1);
-        sqLiteDatabase.execSQL(insertQuery2);
-        sqLiteDatabase.execSQL(insertQuery3);
-        sqLiteDatabase.execSQL(insertQuery4);
-        sqLiteDatabase.execSQL(insertQuery5);
+//        sqLiteDatabase.execSQL(insertQuery2);
+//        sqLiteDatabase.execSQL(insertQuery3);
+//        sqLiteDatabase.execSQL(insertQuery4);
+//        sqLiteDatabase.execSQL(insertQuery5);
         sqLiteDatabase.execSQL(insertQuery6);
         sqLiteDatabase.execSQL(insertQuery7);
         sqLiteDatabase.execSQL(insertQuery8);

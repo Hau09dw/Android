@@ -4,17 +4,16 @@
     <item
         android:id="@+id/bottom_back_id"
         android:title="Back"
-
         android:icon="@drawable/back"/>
 
     <item
         android:id="@+id/bottom_home_id"
         android:title="Home"
-        android:icon="@drawable/home"
-        />
+        android:icon="@drawable/home" />
 
     <item
         android:title=""
+        android:enabled="false"
        />
 
     <item
