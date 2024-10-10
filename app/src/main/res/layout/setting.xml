@@ -38,6 +38,22 @@
     </LinearLayout>
 
     <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_marginTop="10dp"
+        android:padding="10dp">
+        <Switch
+            android:id="@+id/estimateDaySwitch"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Turn on/off Estimate Day"
+            android:textStyle="bold"
+            android:textSize="24dp"
+        />
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/layout_taskName"
         android:orientation="vertical"
         android:layout_width="match_parent"
@@ -51,6 +67,6 @@
             android:text="Turn on/off Music"
             android:textStyle="bold"
             android:textSize="24dp"
-        />
+            />
     </LinearLayout>
 </LinearLayout>

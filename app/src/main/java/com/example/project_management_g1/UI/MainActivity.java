@@ -14,12 +14,9 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -28,7 +25,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.graphics.Insets;
@@ -44,8 +40,6 @@ import com.example.project_management_g1.MODEL.Task_Adapter;
 import com.example.project_management_g1.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.navigation.NavigationBarView;
-import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
 
     TextView txt_startdate, txt_enddate;
     ImageButton btnStartdate, btnEnddate;
+    TextView estimateDay;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
         try {
             initializeViews();
             loadTasks();
+            //updateEstimateDayVisibility();
         } catch (Exception e) {
             e.printStackTrace();
             // Hiển thị thông báo lỗi
@@ -104,7 +100,6 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigationView.setBackground(null);
         bottomNavigationView.setOnItemSelectedListener(item -> {
             int itemId = item.getItemId();
-
             if (itemId == R.id.bottom_home_id) {
                 return true;
             } else if (itemId == R.id.bottom_setting_id) {
@@ -240,7 +235,6 @@ public class MainActivity extends AppCompatActivity {
             BackgroundMusicService.LocalBinder binder = (BackgroundMusicService.LocalBinder) service;
             musicService = binder.getService();
             isBound = true;
-
             // Check saved state and play music if it was on
             if (getMusicState()) {
                 musicService.playMusic();
@@ -275,8 +269,16 @@ public class MainActivity extends AppCompatActivity {
         } else {
             Log.e("MainActivity", "musicSwitch not found in settings layout");
         }
-
-
+        Switch estimateDaySwitch = dialog.findViewById(R.id.estimateDaySwitch);
+        if (estimateDaySwitch != null) {
+            estimateDaySwitch.setChecked(getEstimateDayState());
+            estimateDaySwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                saveEstimateDayState(isChecked);
+                updateEstimateDayVisibility();
+            });
+        } else {
+            Log.e("MainActivity", "estimateDaySwitch not found in settings layout");
+        }
         cancelButton = dialog.findViewById(R.id.cancelMusicButton);
         if (cancelButton != null) {
             cancelButton.setOnClickListener(view -> dialog.dismiss());
@@ -294,7 +296,6 @@ public class MainActivity extends AppCompatActivity {
             window.getAttributes().windowAnimations = R.style.DialogAnimation;
             window.setGravity(Gravity.BOTTOM);
         }
-
         dialog.show();
     }
     private boolean getMusicState() {
@@ -306,6 +307,17 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
         SharedPreferences.Editor editor = settings.edit();
         editor.putBoolean(MUSIC_STATE, state);
+        editor.apply();
+    }
+    private boolean getEstimateDayState(){
+        SharedPreferences estimate = getSharedPreferences("EstimateDay",0);
+        return estimate.getBoolean("On",true);
+    }
+    private void saveEstimateDayState(boolean state)
+    {
+        SharedPreferences estimate = getSharedPreferences("EstimateDay",0);
+        SharedPreferences.Editor editor = estimate.edit();
+        editor.putBoolean("On",state);
         editor.apply();
     }
 
@@ -321,12 +333,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        updateEstimateDayVisibility();
         if (isBound && getMusicState() && wasPlayingBeforePause) {
             musicService.playMusic();
             wasPlayingBeforePause = false;
         }
     }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -336,7 +348,11 @@ public class MainActivity extends AppCompatActivity {
             isBound = false;
         }
     }
+    private void updateEstimateDayVisibility() {
+        estimateDay = findViewById(R.id.item_estimateday);
+        if (estimateDay != null) {
 
-
-
+            estimateDay.setVisibility(getEstimateDayState() ? View.VISIBLE : View.INVISIBLE);
+        }
+    }
 }
