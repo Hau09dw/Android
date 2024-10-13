@@ -5,6 +5,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -17,9 +18,17 @@ import java.util.List;
 
 public class Task_Adapter  extends RecyclerView.Adapter<Task_Adapter.TaskViewHolder>{
     private List<Task> tasklist;
+    private OnItemClickListener listener;
+
+    public interface OnItemClickListener{
+        void onItemClick(Task item);
+    }
 
     public Task_Adapter(List<Task> tasklist){
         this.tasklist = tasklist;
+    }
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.listener = listener;
     }
     public void setFilteredList(List<Task> filteredList){
         this.tasklist = filteredList;
@@ -43,7 +52,8 @@ public class Task_Adapter  extends RecyclerView.Adapter<Task_Adapter.TaskViewHol
         holder.estimateday_.setText(task.getEstimaday() + " days");
         holder.startdate_.setText(task.getStartdate());
         holder.enddate_.setText(task.getEnddate());
-        }
+
+    }
 
     @Override
     public int getItemCount() {
@@ -61,6 +71,19 @@ public class Task_Adapter  extends RecyclerView.Adapter<Task_Adapter.TaskViewHol
             estimateday_ = itemView.findViewById(R.id.item_estimateday);
             startdate_ = itemView.findViewById(R.id.item_startdate);
             enddate_ = itemView.findViewById(R.id.item_enddate);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+                    if (position != RecyclerView.NO_POSITION && listener != null) {
+                        listener.onItemClick(tasklist.get(position));
+                    }
+                }
+            });
+
         }
+
+
+
     }
 }

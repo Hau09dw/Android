@@ -22,4 +22,14 @@
     <string name="ex_5">ex: 5,..</string>
     <string name="confirm">CONFIRM</string>
     <string name="ex_yyyy_mm_dd">ex: YYYY/MM/dd</string>
+    <string name="task">Task</string>
+    <string name="assigndev">Assign Dev</string>
+    <string name="update">Update</string>
+    <string name="create">Create</string>
+    <string name="calendar_enddate">calendar endDate</string>
+    <string name="calendar_startdate">Calendar startDate</string>
+    <string name="itemselection_assignee">ItemSelection_Assignee</string>
+    <string name="itemslection_taskname">ItemSlection taskName</string>
+    <string name="item_spinner">item_spinner</string>
+    />
 </resources>

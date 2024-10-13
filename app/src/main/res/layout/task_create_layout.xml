@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/ic_dialogbg">
+
+    <ImageView
+        android:layout_width="70dp"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_round_remove_24"
+        android:layout_gravity="center|top"
+        android:scaleType="centerCrop"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/createTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="5dp"
+            android:padding="8dp"
+            android:text="@string/create"
+            android:textAlignment="viewStart"
+            android:textColor="@color/black"
+            android:textSize="35dp"
+            android:textStyle="bold"/>
+
+        <ImageView
+            android:id="@+id/cancelButton"
+            android:layout_width="54dp"
+            android:layout_height="43dp"
+            android:layout_marginLeft="210dp"
+            android:layout_marginTop="8dp"
+            android:src="@drawable/ic_baseline_clear_24" />
+
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/layout_taskName"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_marginTop="10dp"
+        android:padding="10dp">
+
+        <TextView
+            android:id="@+id/textView_TaskName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/task_name_create"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textStyle="bold"/>
+
+        <EditText
+            android:id="@+id/create_taskName"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:paddingTop="5dp"
+            android:paddingStart="5dp"
+            android:background="@drawable/ic_custom_create_edittext"
+            android:inputType="text"
+            android:textColor="@color/black"
+            android:hint="@string/ex_order_list"
+            android:textColorHint="#868687"
+            />
+
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/layout_assignee"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_marginTop="10dp"
+        android:padding="10dp">
+
+        <TextView
+            android:id="@+id/textView_Asssigee"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/assignee_create"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textStyle="bold"/>
+
+        <EditText
+            android:id="@+id/create_assignee"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:paddingTop="5dp"
+            android:paddingStart="5dp"
+            android:background="@drawable/ic_custom_create_edittext"
+            android:inputType="text"
+            android:textColor="@color/black"
+            android:hint="@string/ex_kaushik"
+            android:textColorHint="#868687"
+            />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/layout_startdate"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_marginTop="10dp"
+        android:padding="10dp">
+
+        <TextView
+            android:id="@+id/textView_startDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/startdate_create"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textStyle="bold"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            >
+
+            <EditText
+                android:enabled="false"
+                android:id="@+id/create_startDate"
+                android:layout_width="400dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/ic_custom_create_edittext"
+                android:inputType="text"
+                android:paddingStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:textColor="@color/black"
+                android:textColorHint="#868687"
+                android:paddingTop="5dp"
+                android:hint="@string/ex_yyyy_mm_dd"/>
+            <ImageButton
+                android:id="@+id/btn_create_StartDate"
+                android:layout_width="121dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:contentDescription="@string/calendar_startdate"
+                app:srcCompat="@drawable/calendar"
+                />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_endDate"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_marginTop="10dp"
+        android:padding="10dp">
+
+        <TextView
+            android:id="@+id/textView_endDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/enddate_create"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textStyle="bold"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            >
+
+            <EditText
+                android:id="@+id/create_EndDate"
+                android:layout_width="400dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/ic_custom_create_edittext"
+                android:inputType="text"
+                android:paddingStart="5dp"
+                android:textColorHint="#868687"
+                android:layout_marginEnd="5dp"
+                android:textColor="@color/black"
+                android:paddingTop="5dp"
+                android:hint="@string/ex_yyyy_mm_dd"/>
+
+            <ImageButton
+                android:id="@+id/btn_create_EndDate"
+                android:layout_width="121dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:contentDescription="@string/calendar_startdate"
+                app:srcCompat="@drawable/calendar" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/layout_estimaday"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_marginTop="10dp"
+        android:padding="10dp">
+
+        <TextView
+            android:id="@+id/textView_estimateDay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/estimateday_create"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textStyle="bold"/>
+
+
+
+        <EditText
+            android:enabled="false"
+            android:id="@+id/create_estimateday"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:paddingTop="5dp"
+            android:paddingStart="5dp"
+            android:background="@drawable/ic_custom_create_edittext"
+            android:inputType="text"
+            android:textColor="@color/black"
+            android:hint="@string/ex_5"
+            android:textColorHint="#868687"
+            />
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/button_create"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:backgroundTint="@color/lavender"
+        android:text="@string/confirm" />
+</LinearLayout>

@@ -16,6 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:textColor="@color/black"
             android:text="@string/task_name" />
 
         <LinearLayout
@@ -27,12 +28,14 @@
             <TextView
                 android:id="@+id/item_assignee"
                 android:layout_width="match_parent"
+                android:textColor="@color/black"
                 android:layout_height="wrap_content"
                 android:text="@string/assignee" />
 
             <TextView
                 android:id="@+id/item_startdate"
                 android:layout_width="match_parent"
+                android:textColor="@color/black"
                 android:layout_height="wrap_content"
                 android:textStyle="bold"
                 android:text="@string/startdate" />
@@ -46,6 +49,7 @@
 
             <TextView
                 android:id="@+id/item_estimateday"
+                android:textColor="@color/black"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/estimate_day" />
@@ -54,6 +58,7 @@
                 android:id="@+id/item_enddate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColor="@color/black"
                 android:textStyle="bold"
                 android:text="@string/end_date" />
         </LinearLayout>
