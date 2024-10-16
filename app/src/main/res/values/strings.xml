@@ -31,5 +31,9 @@
     <string name="itemselection_assignee">ItemSelection_Assignee</string>
     <string name="itemslection_taskname">ItemSlection taskName</string>
     <string name="item_spinner">item_spinner</string>
+    <string name="warning">Warning!</string>
+    <string name="content">content</string>
+    <string name="done">DONE</string>
+    <string name="warningg">warning</string>
     />
 </resources>

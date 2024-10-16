@@ -21,6 +21,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -45,6 +46,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.project_management_g1.DATA.TaskDAO;
 import com.example.project_management_g1.MODEL.Task;
 import com.example.project_management_g1.MODEL.Task_Adapter;
+import com.example.project_management_g1.MODEL.setInputEstimateDay;
 import com.example.project_management_g1.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -230,6 +232,8 @@ public class MainActivity extends AppCompatActivity {
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.task_update_layout);
+        // click vao ben ngoai de dong action
+        dialog.setCanceledOnTouchOutside(true);
 
         TextView taskname_ = dialog.findViewById(R.id.textView_TaskName);
         TextView assginee_ = dialog.findViewById(R.id.textView_Asssigee);
@@ -245,16 +249,19 @@ public class MainActivity extends AppCompatActivity {
         btnStartdate = dialog.findViewById(R.id.btn_update_StartDate);
         btnEnddate = dialog.findViewById(R.id.btn_update_EndDate);
         btn_confirm = dialog.findViewById(R.id.button_update);
+        cancelButton = dialog.findViewById(R.id.cancelButton);
 
         txt_taskname.setText(task.getTask_name());
         txt_estimaday.setText(String.valueOf(task.getEstimaday()));
         txt_assignee.setText(task.getAssignee());
         txt_startdate.setText(task.getStartdate());
         txt_enddate.setText(task.getEnddate());
+        task.setStartdate(txt_startdate.getText().toString().trim());
+        task.setEnddate(txt_enddate.getText().toString().trim());
 
         task.setTask_id(taskDAO.searchTaskIDByTaskName(task.getTask_name()));
         task.setDevtask_id(taskDAO.searchDevIDByDevName(task.getAssignee()));
-
+        //constrain
         txt_taskname.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -266,14 +273,10 @@ public class MainActivity extends AppCompatActivity {
             }
             @Override
             public void afterTextChanged(Editable editable) {
-                if(checkTaskName(txt_taskname)){
-                    txt_taskname.setError("Task must not be similar to the task in the list");
-                    txt_taskname.requestFocus();
-                }
-
+                validateTaskName(txt_taskname,task);
             }
         });
-        txt_enddate.addTextChangedListener(new TextWatcher() {
+        txt_assignee.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
@@ -284,40 +287,41 @@ public class MainActivity extends AppCompatActivity {
             }
             @Override
             public void afterTextChanged(Editable editable) {
-                String start = txt_startdate.getText().toString().trim();
-                String end =txt_enddate.getText().toString().trim();
-                int i = checkDateAndCalculateEstimatedays(start, end);
-                if(i >= 0){
-                    txt_estimaday.setText(String.valueOf(i));
-                } else if (i == -1) {
-                    txt_estimaday.setText(" ");
-                    enddate_.setError("End Date must be higher than Start Date!");
+                if(checkAssignee(txt_assignee)){
+                    if(checkOverLap(task)){
+                        showWarningDialog(dialog.getContext(), task.getTask_name());
+                    }
+
                 }
             }
+
         });
+        constrainStartAndEndDate(txt_startdate,txt_enddate,txt_estimaday,1);
+        constrainStartAndEndDate(txt_enddate,txt_startdate,txt_estimaday,2);
+        setInputEstimateDay.setNonNagativeIntegerInput(txt_estimaday,txt_startdate,txt_enddate);
 
         btn_confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(txt_taskname.getText().toString().trim().isEmpty()) {
-                    txt_taskname.setError("Task name is required");
-                }
-                task.setTask_name(txt_taskname.getText().toString().trim());
-                task.setAssignee(txt_assignee.getText().toString().trim());
-                task.setStartdate(txt_startdate.getText().toString().trim());
-                task.setEnddate(txt_enddate.getText().toString().trim());
-                task.setEstimaday(Integer.parseInt(txt_estimaday.getText().toString().trim()));
-                int resultUpdateTask = taskDAO.updateTask(task);
-                if(resultUpdateTask > 0 ){
-                    loadTasks();
-                    int resulUpdateAssingDev = taskDAO.updateAssignDev(task);
-                    if(resulUpdateAssingDev > 0){
-                        Toast.makeText(dialog.getContext(),"Task updated successfull",Toast.LENGTH_SHORT).show();
+                if(validateInput(txt_taskname,taskname_) && validateTaskName(txt_taskname,task) && validateInput(txt_assignee,assginee_) && validateInput(txt_startdate,startdate_) && validateInput(txt_enddate,enddate_)) {
+                    task.setTask_name(txt_taskname.getText().toString().trim());
+                    task.setAssignee(txt_assignee.getText().toString().trim());
+                    task.setStartdate(txt_startdate.getText().toString().trim());
+                    task.setEnddate(txt_enddate.getText().toString().trim());
+                    task.setEstimaday(Integer.parseInt(txt_estimaday.getText().toString().trim()));
+                    int resultUpdateTask = taskDAO.updateTask(task);
+                    if (resultUpdateTask > 0) {
                         loadTasks();
-                    }
+                        int resulUpdateAssingDev = taskDAO.updateAssignDev(task);
+                        if (resulUpdateAssingDev > 0) {
+                            Toast.makeText(dialog.getContext(), "Task updated successfull", Toast.LENGTH_SHORT).show();
+                            loadTasks();
+                        }
 
-                }else Toast.makeText(dialog.getContext(),"Failed to updated task",Toast.LENGTH_SHORT).show();
-                dialog.dismiss();
+                    } else
+                        Toast.makeText(dialog.getContext(), "Failed to updated task", Toast.LENGTH_SHORT).show();
+                    dialog.dismiss();
+                }
             }
         });
         btnStartdate.setOnClickListener(new View.OnClickListener() {
@@ -332,10 +336,6 @@ public class MainActivity extends AppCompatActivity {
                 showDialogDatepicker(txt_enddate);
             }
         });
-        // click vao ben ngoai de dong action
-        dialog.setCanceledOnTouchOutside(true);
-        //click de thoat action
-        cancelButton = dialog.findViewById(R.id.cancelButton);
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -359,6 +359,8 @@ public class MainActivity extends AppCompatActivity {
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.task_create_layout);
+        // click vao ben ngoai de dong action
+        dialog.setCanceledOnTouchOutside(true);
 
         TextView taskname_ = dialog.findViewById(R.id.textView_TaskName);
         TextView assginee_ = dialog.findViewById(R.id.textView_Asssigee);
@@ -374,7 +376,9 @@ public class MainActivity extends AppCompatActivity {
         btnStartdate = dialog.findViewById(R.id.btn_create_StartDate);
         btnEnddate = dialog.findViewById(R.id.btn_create_EndDate);
         btn_confirm = dialog.findViewById(R.id.button_create);
-
+        cancelButton = dialog.findViewById(R.id.cancelButton);
+        Task task = new Task();
+        //constrain
         txt_taskname.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -386,47 +390,30 @@ public class MainActivity extends AppCompatActivity {
             }
             @Override
             public void afterTextChanged(Editable editable) {
-                if(checkTaskName(txt_taskname)){
-                    txt_taskname.setError("Task must not be similar to the task in the list");
-                    txt_taskname.requestFocus();
-                }
-
+                validateTaskName(txt_taskname,task);
             }
         });
-        txt_enddate.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        constrainStartAndEndDate(txt_startdate,txt_enddate,txt_estimaday,1);
+        constrainStartAndEndDate(txt_enddate,txt_startdate,txt_estimaday,2);
+        setInputEstimateDay.setNonNagativeIntegerInput(txt_estimaday,txt_startdate,txt_enddate);
 
-            }
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-            @Override
-            public void afterTextChanged(Editable editable) {
-                String start = txt_startdate.getText().toString().trim();
-                String end =txt_enddate.getText().toString().trim();
-                int i = checkDateAndCalculateEstimatedays(start, end);
-                if(i >= 0){
-                    txt_estimaday.setText(String.valueOf(i));
-                } else if (i == -1) {
-                    txt_estimaday.setText(" ");
-                    enddate_.setError("End Date must be higher than Start Date!");
-                }
-            }
-        });
-
+        //xu ly button
         btn_confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(validateInput(txt_taskname,taskname_) && validateInput(txt_assignee,assginee_) && validateInput(txt_startdate,startdate_) && validateInput(txt_enddate,enddate_)){
-                    Task task = new Task();
+                if(validateInput(txt_taskname,taskname_) && validateTaskName(txt_taskname,task) && validateInput(txt_assignee,assginee_) && validateInput(txt_startdate,startdate_) && validateInput(txt_enddate,enddate_)){
+
                     task.setTask_name(txt_taskname.getText().toString().trim());
                     task.setEstimaday(Integer.parseInt(txt_estimaday.getText().toString().trim()));
                     task.setAssignee(txt_assignee.getText().toString().trim());
-                    task.setStartdate(txt_enddate.getText().toString().trim());
-                    task.setEnddate(txt_startdate.getText().toString().trim());
+                    task.setStartdate(txt_startdate.getText().toString().trim());
+                    task.setEnddate(txt_enddate.getText().toString().trim());
+                    if(checkAssignee(txt_assignee)){
+                        if(checkOverLap(task)){
+                            showWarningDialog(dialog.getContext(), task.getTask_name());
+                        }
 
+                    }
                     long resultTask = taskDAO.insertTask(task);
                     if(resultTask != -1 ){
                         loadTasks();
@@ -435,14 +422,16 @@ public class MainActivity extends AppCompatActivity {
                         if(resultAssginDev != -1){
                             Toast.makeText(dialog.getContext(), "Task created successfully", Toast.LENGTH_SHORT).show();
                             loadTasks();
+                            dialog.dismiss();
                         }
-                    }else Toast.makeText(dialog.getContext(), "Failed to create task", Toast.LENGTH_SHORT).show();
-                }
-             }
+                    }else Toast.makeText(dialog.getContext(), "Failed to create task(2)", Toast.LENGTH_SHORT).show();
+                }else Toast.makeText(dialog.getContext(), "Failed to create task(1)", Toast.LENGTH_SHORT).show();
+            }
         });
         btnStartdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                txt_estimaday.setEnabled(false);
                 showDialogDatepicker(txt_startdate);
             }
 
@@ -450,16 +439,10 @@ public class MainActivity extends AppCompatActivity {
         btnEnddate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(validateInput(txt_startdate,startdate_)){
-                    showDialogDatepicker(txt_enddate);
-                }
+                txt_estimaday.setEnabled(false);
+                showDialogDatepicker(txt_enddate);
             }
         });
-
-        // click vao ben ngoai de dong action
-        dialog.setCanceledOnTouchOutside(true);
-        //click de thoat action
-        cancelButton = dialog.findViewById(R.id.cancelButton);
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -478,15 +461,123 @@ public class MainActivity extends AppCompatActivity {
         dialog.show();
 
     }
+    //rang buoc startdate-enddate-estimateday
+    private void constrainStartAndEndDate(EditText edittext1, EditText edittext2, EditText estimateday,int item){
+        edittext1.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                edittext1.setError(null);
+            }
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+            @Override
+            public void afterTextChanged(Editable editable) {
+                String txt1 = edittext1.getText().toString().trim();
+                String txt2 =edittext2.getText().toString().trim();
+                switch (item){
+                    case 1:
+                        if(!txt2.equalsIgnoreCase("")&& !estimateday.isEnabled()){
+                            int a = checkDateAndCalculateEstimatedays(txt1, txt2);
+                            if(a >= 0){
+                                estimateday.setText(String.valueOf(a));
+                            } else if (a == -1) {
+                                estimateday.setText(" ");
+                                edittext1.setText("");
+                                edittext1.setError("");
+                            }
+                        }
+                        break;
+                    case 2:
+                        if(!txt1.equalsIgnoreCase("")&& !estimateday.isEnabled()){
+                            int a = checkDateAndCalculateEstimatedays(txt2, txt1);
+                            if(a >= 0){
+                                estimateday.setText(String.valueOf(a));
+                            } else if (a == -1) {
+                                estimateday.setText(" ");
+                                edittext1.setText("");
+                                edittext1.setError("");
+                            }
+                        }
+                }
+
+            }
+        });
+    }
     //check task name
-    private boolean checkTaskName(final EditText editText){
-        for(Task task: taskList){
-            if(task.getTask_name().equalsIgnoreCase(editText.getText().toString().trim())){
+    private boolean validateTaskName(EditText editText, Task currentTask) {
+        String newTaskName = editText.getText().toString().trim();
+        boolean isUpdating = (currentTask != null);
+
+        for (Task task : taskList) {
+            if (task.getTask_name().equalsIgnoreCase(newTaskName)) {
+                if (!isUpdating || !task.equals(currentTask)) {
+                    editText.setError("Task name already exists in the list");
+                    editText.requestFocus();
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+    //cehck assginee
+    private boolean checkAssignee(final EditText editText){
+        for(Task task : taskList){
+            if(task.getAssignee().equalsIgnoreCase(editText.getText().toString().trim()))
                 return true;
+        }
+        return false;
+    }
+    //setup warning
+    public void showWarningDialog(Context context, String taskName) {
+        final Dialog dialog = new Dialog(context);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.warning_dialog);
+
+        TextView txtContent = dialog.findViewById(R.id.txt_warning);
+        Button btnDone = dialog.findViewById(R.id.btn_done);
+
+        // Set up date time
+        SimpleDateFormat outputDateTime = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault());
+        String formatDateTime = outputDateTime.format(new Date());
+
+        txtContent.setText("Task " + taskName + " causes an overlap to other tasks when updating at " + formatDateTime);
+
+        btnDone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        Window window = dialog.getWindow();
+        if (window != null) {
+            window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+            window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        }
+
+        dialog.show();
+    }
+    //check overlap
+    public boolean checkOverLap(final Task task){
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd", Locale.getDefault());
+        for(Task taskex : taskList){
+            try{
+                Date startcheck = simpleDateFormat.parse(task.getStartdate().trim());
+                Date endcheck = simpleDateFormat.parse(task.getEnddate().trim());
+                Date startdateonlist = simpleDateFormat.parse(taskex.getStartdate().trim());
+                Date enddateonlist = simpleDateFormat.parse(taskex.getEnddate().trim());
+                if(taskex != task && !(startcheck.after(enddateonlist) || endcheck.before(startdateonlist)))
+                    return true;
+
+            }catch(ParseException e){
+                e.printStackTrace();
             }
         }
         return false;
     }
+
     // kiem tra ngay va tinh estimate day
     private int checkDateAndCalculateEstimatedays(String startdate, String enddate){
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd",Locale.getDefault());
@@ -496,7 +587,7 @@ public class MainActivity extends AppCompatActivity {
             if(start != null && end != null){
                 long time = end.getTime() - start.getTime();
                 if(time >= 0){
-                     return (int) TimeUnit.DAYS.convert(time,TimeUnit.MILLISECONDS);
+                     return (int) TimeUnit.DAYS.convert(time,TimeUnit.MILLISECONDS)+1;
                 }
                 else return -1;
             }
@@ -506,6 +597,7 @@ public class MainActivity extends AppCompatActivity {
 
         return -2;
     }
+
     //datetpicker
     private void showDialogDatepicker(final EditText editText){
         Calendar calendar = Calendar.getInstance();

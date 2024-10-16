@@ -49,6 +49,7 @@ public class TaskDAO {
         cursor.close();
         return ID;
     }
+
     //add task
     public long insertTask(Task task){
         ContentValues values = new ContentValues();
@@ -134,4 +135,5 @@ public class TaskDAO {
 
         return listTasks;
     }
+
 }
