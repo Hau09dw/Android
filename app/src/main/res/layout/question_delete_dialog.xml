@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/warningConstraintLayout"
     android:layout_width="300dp"
     android:layout_gravity="center_horizontal"
@@ -11,12 +12,11 @@
         android:id="@+id/dialog_layout"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="80dp"
         android:background="@drawable/ic_custom_alertdialog"
         android:paddingTop="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent">
+        app:layout_constraintStart_toStartOf="parent">
 
         <TextView
             android:id="@+id/title_warning"
@@ -24,49 +24,78 @@
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
             android:paddingTop="7dp"
-            android:text="@string/warning"
+            android:text="@string/question"
+            android:textColor="#2196F3"
             android:textSize="22sp"
             android:textStyle="bold"
-            android:textColor="#FF9800"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/dialog_layout" />
 
         <TextView
             android:id="@+id/txt_warning"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:text="@string/content"
-            android:textColor="@color/black"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="20dp"
             android:layout_marginStart="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="20dp"
+            android:gravity="center_horizontal"
+            android:text="Do you want to delete the task ?"
+            android:textColor="@color/black"
             android:textSize="20sp"
             app:layout_constraintTop_toBottomOf="@id/title_warning" />
+        <LinearLayout
+            android:id="@+id/linearlayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_horizontal"
+            app:layout_constraintTop_toBottomOf="@id/txt_warning">
+            <Button
+                android:id="@+id/btn_cancel"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="10dp"
+                android:backgroundTint="#F80A0A"
+                android:text="CANCEL"
+                android:textColor="@color/white" />
+             <Button
+                android:id="@+id/btn_done"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="20dp"
+                android:backgroundTint="#68DB6C"
+                android:text="@string/ok"
+                android:textColor="@color/white" />
 
-        <Button
-            android:id="@+id/btn_done"
+        </LinearLayout>
+        <CheckBox
+            android:id="@+id/checkbox_question"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:backgroundTint="#68DB6C"
-            android:text="@string/done"
-            android:textColor="@color/white"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="20dp"
-            android:layout_marginStart="20dp"
+            android:text="@string/don_t_show_again"
+            android:textColor="@color/black"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/linearlayout"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/txt_warning" />
+            android:checked="false"
+            />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ImageView
         android:id="@+id/image_warning"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:src="@drawable/warning"
+        android:src="@drawable/question"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/dialog_layout"
         app:layout_constraintBottom_toTopOf="@id/dialog_layout"
         android:layout_marginEnd="40dp"
         android:layout_marginStart="40dp"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

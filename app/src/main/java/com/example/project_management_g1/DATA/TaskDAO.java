@@ -36,12 +36,12 @@ public class TaskDAO {
         return ID;
     }
     @SuppressLint("Range")
-    public int searchDevIDByDevName(String devname) {
+    public int searchDevIDByTaskId(int taskid) {
         int ID = -1;
         String searchQuery = "SELECT " + CreateDatabase.TB_DevTask_Id
                             + " FROM " + CreateDatabase.TB_DevTask
-                            + " WHERE " + CreateDatabase.TB_DevTask_DEVName + " = ?";
-        Cursor cursor = db.rawQuery(searchQuery, new String[]{devname});
+                            + " WHERE " + CreateDatabase.TB_DevTask_TaskID + " = ?";
+        Cursor cursor = db.rawQuery(searchQuery, new String[]{String.valueOf(taskid)});
         // Check if a record was found
         if (cursor.moveToFirst()) {
             ID = cursor.getInt(cursor.getColumnIndex(CreateDatabase.TB_DevTask_Id));
@@ -90,8 +90,8 @@ public class TaskDAO {
     }
     //delete task
     public void deleteTask(Task task){
-        int iddevtask = searchDevIDByDevName(task.getAssignee());
         int idtask = searchTaskIDByTaskName(task.getTask_name());
+        int iddevtask = searchDevIDByTaskId(task.getTask_id());
         db.delete(CreateDatabase.TB_DevTask,CreateDatabase.TB_DevTask_Id+"=?",new String[]{String.valueOf(iddevtask)});
         db.delete(CreateDatabase.TB_Task,CreateDatabase.TB_Task_ID+"=?",new String[]{String.valueOf(idtask)});
     }

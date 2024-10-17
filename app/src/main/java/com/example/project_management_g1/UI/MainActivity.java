@@ -8,8 +8,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
-import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -17,12 +17,12 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -32,6 +32,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
@@ -55,18 +56,24 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
+    private static final String PREFS_NAME_QUESTION = "app_preferences";
+    private static final String KEY_SHOW_QUESTION = "show_question_dialog";
     private RecyclerView rcvTask;
     private Task_Adapter taskAdapter;
     private TaskDAO taskDAO;
     private List<Task> taskList;
+    private List<Task> selectModeItems = new ArrayList<>();
+    private boolean isSelectMode = false;
     private SearchView searchView;
-    private FloatingActionButton fab;
+    private FloatingActionButton fab, fab_delete;
     private ImageView cancelButton;
     private BackgroundMusicService musicService;
     private boolean isBound = false;
@@ -90,31 +97,19 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        initializeViews();
         try {
-            initializeViews();
             loadTasks();
         } catch (Exception e) {
             e.printStackTrace();
-            // Hiển thị thông báo lỗi
             Toast.makeText(this, "An error occurred while loading data", Toast.LENGTH_SHORT).show();
         }
-        //khai bao action search
-        SearchTask();
-        fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showCreateBottomDialog();
-            }
-        });
-        //delete task
-        deleteProject();
+
         //Music Service
         Intent intent = new Intent(this, BackgroundMusicService.class);
         bindService(intent, connection, Context.BIND_AUTO_CREATE);
-
-        bottomNavigationView = findViewById(R.id.bottomNavigationView);
-        bottomNavigationView.setBackground(null);
+        // xu ly event click bottomappbar
         bottomNavigationView.setOnItemSelectedListener(item -> {
             int itemId = item.getItemId();
             if (itemId == R.id.bottom_home_id) {
@@ -128,63 +123,88 @@ public class MainActivity extends AppCompatActivity {
             return false;
         });
     }
-    //delete task
-    private void deleteProject() {
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT |   ItemTouchHelper.RIGHT) {
-            @Override
-            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
-                return false;
-            }
-
-            @Override
-            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-                int i = viewHolder.getAdapterPosition();
-                if(i != RecyclerView.NO_POSITION){
-                    Task task = taskList.get(i);
-                    taskDAO.deleteTask(task);
-                    loadTasks();
-                    Toast.makeText(MainActivity.this, "Task deleted succefull", Toast.LENGTH_SHORT).show();
-                } else
-                    Toast.makeText(MainActivity.this, "Failed to delete task", Toast.LENGTH_SHORT).show();
-
-            }
-        });
-        itemTouchHelper.attachToRecyclerView(rcvTask);
-    }
-
-    //khoi tao reyclerView
+    //khoi tao va anh xa
     private void initializeViews() {
         taskDAO = new TaskDAO(this);
         rcvTask = findViewById(R.id.id_recyclerview);
+        fab = findViewById(R.id.fab);
+        fab_delete = findViewById(R.id.fab_delete);
+        searchView = findViewById(R.id.action_search);
+        bottomNavigationView = findViewById(R.id.bottomNavigationView);
+
+        fab.setOnClickListener(view -> showCreateBottomDialog());
+        bottomNavigationView.setBackground(null);
+
+        setupRecyclerView();
+        SearchTask();
+        //event delete task
+        setupSwipeToDelete();
     }
-    //load lai data
+    private void toggSelectionFab(int item){
+        switch (item){
+            case 1:
+                fab.setBackgroundTintList(ColorStateList.valueOf(Color.CYAN));
+                fab.setImageResource(R.drawable.floatadd);
+                fab.setOnClickListener(view -> showCreateBottomDialog());
+                break;
+            case 2:
+                fab.setBackgroundTintList(ColorStateList.valueOf(Color.RED));
+                fab.setImageResource(android.R.drawable.ic_menu_delete);
+                fab.setOnClickListener(view -> deleteSelectedTasks());
+                break;
+        }
+    }
     private void loadTasks() {
         taskList = taskDAO.getAllTasks();
+
         if (taskList.isEmpty()) {
             // Hiển thị thông báo nếu không có dữ liệu
             Toast.makeText(this, "There is no data to display", Toast.LENGTH_SHORT).show();
+        }else {
+            Collections.sort(taskList, new sortByTaskName1());
+            taskAdapter = new Task_Adapter(taskList);
+            rcvTask.setAdapter(taskAdapter);
+
+            // xu ly event update(CRUD)
+            taskAdapter.setOnSelectModeChangeListener(isSelectMode -> {
+                if (isSelectMode) {
+                    toggSelectionFab(2);
+                } else {
+                    toggSelectionFab(1);
+                }
+            });
+
+            taskAdapter.setOnItemClickListener(task -> showUpdateBottomDialog(task));
         }
-        setUpRecycerView();
     }
-    private void setUpRecycerView(){
-        taskAdapter = new Task_Adapter(taskList);
-        rcvTask.setAdapter(taskAdapter);
+    private void deleteSelectedTasks(){
+        List<Task> selectedItems = taskAdapter.getSelectedItems();
+        for (Task task : selectedItems) {
+            taskDAO.deleteTask(task);
+        }
+        taskAdapter.clearSelection();
+        loadTasks();
+    }
+    private class sortByTaskName1 implements Comparator<Task> {
+        @Override
+        public int compare(Task task, Task task1) {
+            return task.getTask_name().compareToIgnoreCase(task1.getTask_name()) ;
+        }
+    }
+    private class sortByTaskName2 implements Comparator<Task> {
+        @Override
+        public int compare(Task task, Task task1) {
+            return task.getTask_name().compareTo(task1.getTask_name()) ;
+        }
+    }
+    private void setupRecyclerView(){
         rcvTask.setLayoutManager(new LinearLayoutManager(this));
-        //duong ngan cach
         rcvTask.addItemDecoration(new DividerItemDecoration(this,DividerItemDecoration.VERTICAL));
-        // xu ly action reyclerview
-        taskAdapter.setOnItemClickListener(new Task_Adapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(Task task) {
-                showUpdateBottomDialog(task);
-            }
-        });
     }
+
     //tim kiem theo task name hoac assignee
     private void SearchTask(){
-        searchView = findViewById(R.id.action_search);
         searchView.clearFocus();
-
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -195,21 +215,6 @@ public class MainActivity extends AppCompatActivity {
             public boolean onQueryTextChange(String newText) {
                 filterTask(newText);
                 return true;
-            }
-        });
-        searchView.findViewById(R.id.action_search).setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    if (searchView.hasFocus()) {
-                        Rect outRect = new Rect();
-                        searchView.getGlobalVisibleRect(outRect);
-                        if (!outRect.contains((int)event.getRawX(), (int)event.getRawY())) {
-                            searchView.clearFocus();
-                        }
-                    }
-                }
-                return false;
             }
         });
     }
@@ -227,7 +232,75 @@ public class MainActivity extends AppCompatActivity {
             taskAdapter.setFilteredList(filteredListTask);
         }
     }
-    //acion update task
+    // thiet lap keo luot event xoa
+    private void setupSwipeToDelete() {
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT |  ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                int i = viewHolder.getAdapterPosition();
+                showQuestionDelete(MainActivity.this,i);
+
+            }
+        });
+        itemTouchHelper.attachToRecyclerView(rcvTask);
+    }
+    public void showQuestionDelete(Context context,int i) {
+        SharedPreferences preferences = getSharedPreferences(PREFS_NAME_QUESTION,MODE_PRIVATE);
+        boolean showQuestion = preferences.getBoolean(KEY_SHOW_QUESTION,true);
+        if(!showQuestion)
+        {
+            deleteTask(i);
+            return;
+        }
+        final Dialog dialog = new Dialog(context);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.question_delete_dialog);
+
+        TextView txtContent = dialog.findViewById(R.id.txt_warning);
+        Button btnDone = dialog.findViewById(R.id.btn_done);
+        Button btnCancel = dialog.findViewById(R.id.btn_cancel);
+        CheckBox checkBox = dialog.findViewById(R.id.checkbox_question);
+
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                loadTasks();
+                dialog.dismiss();
+            }
+        });
+        btnDone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(checkBox.isChecked())
+                    preferences.edit().putBoolean(KEY_SHOW_QUESTION,false).apply();
+               deleteTask(i);
+                dialog.dismiss();
+            }
+        });
+
+        Window window = dialog.getWindow();
+        if (window != null) {
+            window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+            window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        }
+        dialog.show();
+    }
+    //event delete task
+    private void deleteTask(int i) {
+        if(i != RecyclerView.NO_POSITION){
+            Task task = taskList.get(i);
+            taskDAO.deleteTask(task);
+            loadTasks();
+        } else
+            Toast.makeText(MainActivity.this, "Failed to delete task", Toast.LENGTH_SHORT).show();
+    }
+
+    //event update task(CRUD)
     private void showUpdateBottomDialog(final Task task) {
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -256,11 +329,9 @@ public class MainActivity extends AppCompatActivity {
         txt_assignee.setText(task.getAssignee());
         txt_startdate.setText(task.getStartdate());
         txt_enddate.setText(task.getEnddate());
-        task.setStartdate(txt_startdate.getText().toString().trim());
-        task.setEnddate(txt_enddate.getText().toString().trim());
 
         task.setTask_id(taskDAO.searchTaskIDByTaskName(task.getTask_name()));
-        task.setDevtask_id(taskDAO.searchDevIDByDevName(task.getAssignee()));
+        task.setDevtask_id(taskDAO.searchDevIDByTaskId(task.getTask_id()));
         //constrain
         txt_taskname.addTextChangedListener(new TextWatcher() {
             @Override
@@ -287,7 +358,7 @@ public class MainActivity extends AppCompatActivity {
             }
             @Override
             public void afterTextChanged(Editable editable) {
-                if(checkAssignee(txt_assignee)){
+                if(checkAssignee(txt_assignee,task)){
                     if(checkOverLap(task)){
                         showWarningDialog(dialog.getContext(), task.getTask_name());
                     }
@@ -309,6 +380,12 @@ public class MainActivity extends AppCompatActivity {
                     task.setStartdate(txt_startdate.getText().toString().trim());
                     task.setEnddate(txt_enddate.getText().toString().trim());
                     task.setEstimaday(Integer.parseInt(txt_estimaday.getText().toString().trim()));
+                    if (checkAssignee(txt_assignee, task)) {
+                        if (checkOverLap(task)) {
+                            showWarningDialog(dialog.getContext(), task.getTask_name());
+                        }
+
+                    }
                     int resultUpdateTask = taskDAO.updateTask(task);
                     if (resultUpdateTask > 0) {
                         loadTasks();
@@ -327,12 +404,14 @@ public class MainActivity extends AppCompatActivity {
         btnStartdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                txt_estimaday.setEnabled(false);
                 showDialogDatepicker(txt_startdate);
             }
         });
         btnEnddate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                txt_estimaday.setEnabled(false);
                 showDialogDatepicker(txt_enddate);
             }
         });
@@ -354,7 +433,7 @@ public class MainActivity extends AppCompatActivity {
         dialog.show();
 
     }
-    //action add task
+    //event add task(CRUD)
     private void showCreateBottomDialog() {
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -384,51 +463,55 @@ public class MainActivity extends AppCompatActivity {
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
             }
+
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
             }
+
             @Override
             public void afterTextChanged(Editable editable) {
-                validateTaskName(txt_taskname,task);
+                validateTaskName(txt_taskname, task);
             }
         });
-        constrainStartAndEndDate(txt_startdate,txt_enddate,txt_estimaday,1);
-        constrainStartAndEndDate(txt_enddate,txt_startdate,txt_estimaday,2);
-        setInputEstimateDay.setNonNagativeIntegerInput(txt_estimaday,txt_startdate,txt_enddate);
+        constrainStartAndEndDate(txt_startdate, txt_enddate, txt_estimaday, 1);
+        constrainStartAndEndDate(txt_enddate, txt_startdate, txt_estimaday, 2);
+        setInputEstimateDay.setNonNagativeIntegerInput(txt_estimaday, txt_startdate, txt_enddate);
 
         //xu ly button
         btn_confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(validateInput(txt_taskname,taskname_) && validateTaskName(txt_taskname,task) && validateInput(txt_assignee,assginee_) && validateInput(txt_startdate,startdate_) && validateInput(txt_enddate,enddate_)){
+                if (validateInput(txt_taskname, taskname_) && validateTaskName(txt_taskname, task) && validateInput(txt_assignee, assginee_) && validateInput(txt_startdate, startdate_) && validateInput(txt_enddate, enddate_)) {
 
                     task.setTask_name(txt_taskname.getText().toString().trim());
                     task.setEstimaday(Integer.parseInt(txt_estimaday.getText().toString().trim()));
                     task.setAssignee(txt_assignee.getText().toString().trim());
                     task.setStartdate(txt_startdate.getText().toString().trim());
                     task.setEnddate(txt_enddate.getText().toString().trim());
-                    if(checkAssignee(txt_assignee)){
-                        if(checkOverLap(task)){
+                    if (checkAssignee(txt_assignee, task)) {
+                        if (checkOverLap(task)) {
                             showWarningDialog(dialog.getContext(), task.getTask_name());
                         }
 
                     }
                     long resultTask = taskDAO.insertTask(task);
-                    if(resultTask != -1 ){
+                    if (resultTask != -1) {
                         loadTasks();
                         task.setTask_id(taskDAO.searchTaskIDByTaskName(task.getTask_name()));
                         long resultAssginDev = taskDAO.insertAssignDev(task);
-                        if(resultAssginDev != -1){
+                        if (resultAssginDev != -1) {
                             Toast.makeText(dialog.getContext(), "Task created successfully", Toast.LENGTH_SHORT).show();
                             loadTasks();
                             dialog.dismiss();
                         }
-                    }else Toast.makeText(dialog.getContext(), "Failed to create task(2)", Toast.LENGTH_SHORT).show();
-                }else Toast.makeText(dialog.getContext(), "Failed to create task(1)", Toast.LENGTH_SHORT).show();
+                    } else
+                        Toast.makeText(dialog.getContext(), "Failed to create task(2)", Toast.LENGTH_SHORT).show();
+                } else
+                    Toast.makeText(dialog.getContext(), "Failed to create task(1)", Toast.LENGTH_SHORT).show();
             }
         });
-        btnStartdate.setOnClickListener(new View.OnClickListener() {
+         btnStartdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 txt_estimaday.setEnabled(false);
@@ -461,6 +544,7 @@ public class MainActivity extends AppCompatActivity {
         dialog.show();
 
     }
+
     //rang buoc startdate-enddate-estimateday
     private void constrainStartAndEndDate(EditText edittext1, EditText edittext2, EditText estimateday,int item){
         edittext1.addTextChangedListener(new TextWatcher() {
@@ -475,32 +559,23 @@ public class MainActivity extends AppCompatActivity {
             public void afterTextChanged(Editable editable) {
                 String txt1 = edittext1.getText().toString().trim();
                 String txt2 =edittext2.getText().toString().trim();
+                int a = 0;
+                if(!txt2.equalsIgnoreCase("")&& !estimateday.isEnabled()){
                 switch (item){
                     case 1:
-                        if(!txt2.equalsIgnoreCase("")&& !estimateday.isEnabled()){
-                            int a = checkDateAndCalculateEstimatedays(txt1, txt2);
-                            if(a >= 0){
-                                estimateday.setText(String.valueOf(a));
-                            } else if (a == -1) {
-                                estimateday.setText(" ");
-                                edittext1.setText("");
-                                edittext1.setError("");
-                            }
-                        }
-                        break;
+                         a = checkDateAndCalculateEstimatedays(txt1, txt2);
+                    break;
                     case 2:
-                        if(!txt1.equalsIgnoreCase("")&& !estimateday.isEnabled()){
-                            int a = checkDateAndCalculateEstimatedays(txt2, txt1);
-                            if(a >= 0){
-                                estimateday.setText(String.valueOf(a));
-                            } else if (a == -1) {
-                                estimateday.setText(" ");
-                                edittext1.setText("");
-                                edittext1.setError("");
-                            }
-                        }
+                         a = checkDateAndCalculateEstimatedays(txt2, txt1);
+                     break;
                 }
-
+                if(a >= 0){
+                estimateday.setText(String.valueOf(a));
+                } else if (a == -1) {
+                estimateday.setText(" ");
+                edittext1.setText("");
+                edittext1.setError("");
+            }}
             }
         });
     }
@@ -521,11 +596,13 @@ public class MainActivity extends AppCompatActivity {
 
         return true;
     }
-    //cehck assginee
-    private boolean checkAssignee(final EditText editText){
+    //check assginee
+    private boolean checkAssignee(final EditText editText, Task currentTask){
+        boolean  isUpdating = (currentTask != null);
         for(Task task : taskList){
             if(task.getAssignee().equalsIgnoreCase(editText.getText().toString().trim()))
-                return true;
+                if(!isUpdating || !task.equals(currentTask))
+                    return true;
         }
         return false;
     }
@@ -577,7 +654,6 @@ public class MainActivity extends AppCompatActivity {
         }
         return false;
     }
-
     // kiem tra ngay va tinh estimate day
     private int checkDateAndCalculateEstimatedays(String startdate, String enddate){
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd",Locale.getDefault());
@@ -597,7 +673,6 @@ public class MainActivity extends AppCompatActivity {
 
         return -2;
     }
-
     //datetpicker
     private void showDialogDatepicker(final EditText editText){
         Calendar calendar = Calendar.getInstance();
@@ -623,6 +698,7 @@ public class MainActivity extends AppCompatActivity {
         }
         return true;
     }
+
     // Settings Task
     private ServiceConnection connection = new ServiceConnection() {
         @Override
@@ -697,7 +773,6 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
         return settings.getBoolean(MUSIC_STATE, false); // false is the default value
     }
-
     private void saveMusicState(boolean state) {
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
         SharedPreferences.Editor editor = settings.edit();
@@ -715,7 +790,6 @@ public class MainActivity extends AppCompatActivity {
         editor.putBoolean("On",state);
         editor.apply();
     }
-
     @Override
     protected void onPause() {
         super.onPause();
@@ -724,7 +798,6 @@ public class MainActivity extends AppCompatActivity {
             wasPlayingBeforePause = true;
         }
     }
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -733,6 +806,7 @@ public class MainActivity extends AppCompatActivity {
             musicService.playMusic();
             wasPlayingBeforePause = false;
         }
+
     }
     @Override
     protected void onDestroy() {

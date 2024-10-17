@@ -39,47 +39,47 @@ public class CreateDatabase extends SQLiteOpenHelper {
         String insertQuery1 = "INSERT INTO " + TB_DevTask + " (" + TB_DevTask_DEVName + ", " + TB_DevTask_TaskID + ", " + TB_DevTask_StartDate + ", " + TB_DevTask_EndDate + ") " +
                 "VALUES('Ramesh', 3, '2024-5-1', '2024-5-3');";
 
-//        String insertQuery2 = "INSERT INTO " + TB_DevTask + " (" + TB_DevTask_DEVName + ", " + TB_DevTask_TaskID + ", " + TB_DevTask_StartDate + ", " + TB_DevTask_EndDate + ") " +
-//                "VALUES('Khilan', 2, '2024-5-2', '2024-5-4');";
-//
-//        String insertQuery3 = "INSERT INTO " + TB_DevTask + " (" + TB_DevTask_DEVName + ", " + TB_DevTask_TaskID + ", " + TB_DevTask_StartDate + ", " + TB_DevTask_EndDate + ") " +
-//                "VALUES('Kaushik', 1, '2024-4-28', '2024-4-30');";
-//
-//        String insertQuery4 = "INSERT INTO " + TB_DevTask + " (" + TB_DevTask_DEVName + ", " + TB_DevTask_TaskID + ", " + TB_DevTask_StartDate + ", " + TB_DevTask_EndDate + ") " +
-//                "VALUES('Kaushik', 4, '2024-5-6', '2024-5-8');";
-//
-//        String insertQuery5 = "INSERT INTO " + TB_DevTask + " (" + TB_DevTask_DEVName + ", " + TB_DevTask_TaskID + ", " + TB_DevTask_StartDate + ", " + TB_DevTask_EndDate + ") " +
-//                "VALUES('Superman', 5, '2024-5-3', '2024-5-5');";
-//
+        String insertQuery2 = "INSERT INTO " + TB_DevTask + " (" + TB_DevTask_DEVName + ", " + TB_DevTask_TaskID + ", " + TB_DevTask_StartDate + ", " + TB_DevTask_EndDate + ") " +
+                "VALUES('Khilan', 2, '2024-5-2', '2024-5-4');";
+
+        String insertQuery3 = "INSERT INTO " + TB_DevTask + " (" + TB_DevTask_DEVName + ", " + TB_DevTask_TaskID + ", " + TB_DevTask_StartDate + ", " + TB_DevTask_EndDate + ") " +
+                "VALUES('Kaushik', 1, '2024-4-28', '2024-4-30');";
+
+        String insertQuery4 = "INSERT INTO " + TB_DevTask + " (" + TB_DevTask_DEVName + ", " + TB_DevTask_TaskID + ", " + TB_DevTask_StartDate + ", " + TB_DevTask_EndDate + ") " +
+                "VALUES('Kaushik', 4, '2024-5-6', '2024-5-8');";
+
+        String insertQuery5 = "INSERT INTO " + TB_DevTask + " (" + TB_DevTask_DEVName + ", " + TB_DevTask_TaskID + ", " + TB_DevTask_StartDate + ", " + TB_DevTask_EndDate + ") " +
+                "VALUES('Superman', 5, '2024-5-3', '2024-5-5');";
+
         String insertQuery6 = "INSERT INTO " + TB_Task + " (" + TB_Task_TaskName + ", " + TB_Task_EstimateDay + ") " +
-                "VALUES('Order list', 5);";
+                "VALUES('Order list', 3);";
 
         String insertQuery7 = "INSERT INTO " + TB_Task + " (" + TB_Task_TaskName + ", " + TB_Task_EstimateDay + ") " +
                 "VALUES('Order detail', 3);";
 
         String insertQuery8 = "INSERT INTO " + TB_Task + " (" + TB_Task_TaskName + ", " + TB_Task_EstimateDay + ") " +
-                "VALUES('Product list',null );";
-//
-//        String insertQuery9 = "INSERT INTO " + TB_Task + " (" + TB_Task_TaskName + ", " + TB_Task_EstimateDay + ") " +
-//                "VALUES('Product detail', 3);";
-//
-//        String insertQuery10 = "INSERT INTO " + TB_Task + " (" + TB_Task_TaskName + ", " + TB_Task_EstimateDay + ") " +
-//                "VALUES('Coupon list', 3);";
+                "VALUES('Product list', 3);";
+
+        String insertQuery9 = "INSERT INTO " + TB_Task + " (" + TB_Task_TaskName + ", " + TB_Task_EstimateDay + ") " +
+                "VALUES('Product detail', 3);";
+
+        String insertQuery10 = "INSERT INTO " + TB_Task + " (" + TB_Task_TaskName + ", " + TB_Task_EstimateDay + ") " +
+                "VALUES('Coupon list', 3);";
 
         // Execute table creation and data insertion
         sqLiteDatabase.execSQL(tnDESTask);
         sqLiteDatabase.execSQL(tbTask);
-
+        // tast-data
         sqLiteDatabase.execSQL(insertQuery1);
-//        sqLiteDatabase.execSQL(insertQuery2);
-//        sqLiteDatabase.execSQL(insertQuery3);
-//        sqLiteDatabase.execSQL(insertQuery4);
-//        sqLiteDatabase.execSQL(insertQuery5);
+        sqLiteDatabase.execSQL(insertQuery2);
+        sqLiteDatabase.execSQL(insertQuery3);
+        sqLiteDatabase.execSQL(insertQuery4);
+        sqLiteDatabase.execSQL(insertQuery5);
         sqLiteDatabase.execSQL(insertQuery6);
         sqLiteDatabase.execSQL(insertQuery7);
         sqLiteDatabase.execSQL(insertQuery8);
-//        sqLiteDatabase.execSQL(insertQuery9);
-//        sqLiteDatabase.execSQL(insertQuery10);
+        sqLiteDatabase.execSQL(insertQuery9);
+        sqLiteDatabase.execSQL(insertQuery10);
     }
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {

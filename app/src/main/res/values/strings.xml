@@ -35,5 +35,8 @@
     <string name="content">content</string>
     <string name="done">DONE</string>
     <string name="warningg">warning</string>
+    <string name="ok">OK</string>
+    <string name="question">Question?</string>
+    <string name="don_t_show_again">Don\'t show again</string>
     />
 </resources>
