@@ -271,7 +271,7 @@ public class MainActivity extends AppCompatActivity {
         });
         itemTouchHelper.attachToRecyclerView(rcvTask);
     }
-    //dialog question to delete task(swiped)
+    //dialog question to delete task
     @SuppressLint("SetTextI18n")
     public void showQuestionDelete(Context context, int i, int item) {
         SharedPreferences preferences = getSharedPreferences(PREFS_NAME_QUESTION,MODE_PRIVATE);

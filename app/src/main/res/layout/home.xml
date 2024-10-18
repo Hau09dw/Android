@@ -106,7 +106,7 @@
                         android:id="@+id/textView4"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="#FF9800"
+                        android:textColor="#F7CE68"
                         android:text="@string/startdate"
                         android:textStyle="bold"
                         android:textSize="15sp"/>
@@ -134,7 +134,7 @@
                         android:id="@+id/textView6"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="#FF9800"
+                        android:textColor="#F7CE68"
                         android:text="@string/end_date"
                         android:textStyle="bold"
                         android:textSize="15sp"

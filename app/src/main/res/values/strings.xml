@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Project_management_G1</string>
+    <string name="app_name">Project plan</string>
     <string name="home_title">Project plan</string>
     <string name="task_name">TASK NAME</string>
     <string name="search">Search...</string>
