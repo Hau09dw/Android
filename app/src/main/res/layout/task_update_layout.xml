@@ -48,11 +48,10 @@
                     android:id="@+id/cancelButton"
                     android:layout_width="54dp"
                     android:layout_height="43dp"
-                    android:layout_marginLeft="210dp"
                     android:layout_marginTop="8dp"
-                    android:src="@drawable/ic_baseline_clear_24"
+                    android:src="@android:drawable/ic_delete"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"/>
+                    app:layout_constraintTop_toTopOf="parent" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
             <LinearLayout
