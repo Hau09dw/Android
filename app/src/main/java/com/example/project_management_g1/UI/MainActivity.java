@@ -176,6 +176,7 @@ public class MainActivity extends AppCompatActivity {
             taskAdapter.setOnItemClickListener(task -> showUpdateBottomDialog(task));
         }
     }
+
     //event sort taskname
     private void sortTaskname(){
         SharedPreferences preferences = getSharedPreferences(PREFS_NAME_QUESTION, MODE_PRIVATE);
@@ -183,6 +184,19 @@ public class MainActivity extends AppCompatActivity {
         if(isShort){
             Collections.sort(taskList,new sortByTaskName1());
         }else Collections.sort(taskList,new sortByTaskName2());
+    }
+    // xy ly sap xep
+    private class sortByTaskName1 implements Comparator<Task> {
+        @Override
+        public int compare(Task task, Task task1) {
+            return task.getTask_name().compareToIgnoreCase(task1.getTask_name()) ;
+        }
+    }
+    private class sortByTaskName2 implements Comparator<Task> {
+        @Override
+        public int compare(Task task, Task task1) {
+            return task1.getTask_name().compareToIgnoreCase(task.getTask_name()) ;
+        }
     }
     // event delete task(selectModeItems)
     private void deleteSelectedTasks(){
@@ -206,19 +220,6 @@ public class MainActivity extends AppCompatActivity {
                 fab.setImageResource(android.R.drawable.ic_menu_delete);
                 fab.setOnClickListener(view -> showQuestionDelete(MainActivity.this,0,2));
                 break;
-        }
-    }
-    // xy ly sap xep
-    private class sortByTaskName1 implements Comparator<Task> {
-        @Override
-        public int compare(Task task, Task task1) {
-            return task.getTask_name().compareToIgnoreCase(task1.getTask_name()) ;
-        }
-    }
-    private class sortByTaskName2 implements Comparator<Task> {
-        @Override
-        public int compare(Task task, Task task1) {
-            return task.getTask_name().compareTo(task1.getTask_name()) ;
         }
     }
 
