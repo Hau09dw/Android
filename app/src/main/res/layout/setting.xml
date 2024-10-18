@@ -7,35 +7,39 @@
     android:layout_height="match_parent"
     android:background="@drawable/ic_dialogbg">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_height="wrap_content">
 
         <TextView
             android:id="@+id/SettingsTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="238dp"
             android:padding="8dp"
-            android:text="Setting"
+            android:paddingStart="@dimen/_10dp"
+            android:text="@string/setting"
             android:textAlignment="viewStart"
             android:textColor="@color/black"
-            android:textSize="35dp"
-            android:textStyle="bold" />
+            android:textSize="35sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/cancelMusicButton"
             android:layout_width="54dp"
             android:layout_height="43dp"
-            android:layout_marginLeft="205dp"
-            android:layout_marginTop="8dp"
-            android:src="@drawable/ic_baseline_clear_24" />
+            android:layout_marginEnd="16dp"
+            android:contentDescription="@string/cancel_button"
+            android:src="@drawable/ic_baseline_clear_24"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <LinearLayout
         android:orientation="vertical"
@@ -47,10 +51,11 @@
             android:id="@+id/estimateDaySwitch"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="Turn on/off Estimate Day"
+            android:text="@string/turn_on_off_estimate_day"
             android:textStyle="bold"
-            android:textSize="24dp"
-        />
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            tools:ignore="UseSwitchCompatOrMaterialXml" />
     </LinearLayout>
 
     <LinearLayout
@@ -64,9 +69,10 @@
             android:id="@+id/musicSwitch"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="Turn on/off Music"
+            android:text="@string/turn_on_off_music"
             android:textStyle="bold"
-            android:textSize="24dp"
-            />
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            tools:ignore="UseSwitchCompatOrMaterialXml" />
     </LinearLayout>
 </LinearLayout>

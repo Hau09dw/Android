@@ -106,7 +106,7 @@
                         android:id="@+id/textView4"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="#FFEB3B"
+                        android:textColor="#FF9800"
                         android:text="@string/startdate"
                         android:textStyle="bold"
                         android:textSize="15sp"/>
@@ -125,7 +125,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/estimate_day"
-                        android:textColor="#76FF03"
+                        android:textColor="#62E219"
                         android:textStyle="bold"
                         android:textSize="15sp"
                         />
@@ -134,7 +134,7 @@
                         android:id="@+id/textView6"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="#FFEB3B"
+                        android:textColor="#FF9800"
                         android:text="@string/end_date"
                         android:textStyle="bold"
                         android:textSize="15sp"
@@ -190,20 +190,10 @@
             app:layout_anchor="@id/bottomAppBar"
             app:maxImageSize="40dp"
             android:id="@+id/fab"
+            android:contentDescription="@string/fab"
             app:tint="@color/black"
             android:layout_gravity="center"
             app:backgroundTint="@color/cyan"/>
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fab_delete"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            app:layout_anchor="@id/bottomAppBar"
-            android:src="@android:drawable/ic_menu_delete"
-            android:visibility="gone"
-            app:backgroundTint="#e12828"
-            app:maxImageSize="40dp"
-            app:tint="@color/black" />
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

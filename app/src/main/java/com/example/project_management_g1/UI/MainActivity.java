@@ -52,6 +52,8 @@ import com.example.project_management_g1.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import org.w3c.dom.Text;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -66,14 +68,14 @@ import java.util.concurrent.TimeUnit;
 public class MainActivity extends AppCompatActivity {
     private static final String PREFS_NAME_QUESTION = "app_preferences";
     private static final String KEY_SHOW_QUESTION = "show_question_dialog";
+    private static final String KEY_SHOW_QUESTION_SELECT = "show_question_select_dialog";
+    private static final String KEY_SORT = "key_sort";
     private RecyclerView rcvTask;
     private Task_Adapter taskAdapter;
     private TaskDAO taskDAO;
     private List<Task> taskList;
-    private List<Task> selectModeItems = new ArrayList<>();
-    private boolean isSelectMode = false;
     private SearchView searchView;
-    private FloatingActionButton fab, fab_delete;
+    private FloatingActionButton fab;
     private ImageView cancelButton;
     private BackgroundMusicService musicService;
     private boolean isBound = false;
@@ -102,14 +104,13 @@ public class MainActivity extends AppCompatActivity {
         try {
             loadTasks();
         } catch (Exception e) {
-            e.printStackTrace();
             Toast.makeText(this, "An error occurred while loading data", Toast.LENGTH_SHORT).show();
         }
 
         //Music Service
         Intent intent = new Intent(this, BackgroundMusicService.class);
         bindService(intent, connection, Context.BIND_AUTO_CREATE);
-        // xu ly event click bottomappbar
+        //process  event click bottomappbar
         bottomNavigationView.setOnItemSelectedListener(item -> {
             int itemId = item.getItemId();
             if (itemId == R.id.bottom_home_id) {
@@ -118,6 +119,13 @@ public class MainActivity extends AppCompatActivity {
                 showSettingsDialog();
                 return true;
             } else if (itemId == R.id.bottom_ganttchart_id) {
+                return true;
+            } else if (itemId == R.id.bottom_sort_id) {
+                SharedPreferences preferences = getSharedPreferences(PREFS_NAME_QUESTION, MODE_PRIVATE);
+                boolean currentSortState = preferences.getBoolean(KEY_SORT, true);
+                boolean newSortState = !currentSortState;
+                preferences.edit().putBoolean(KEY_SORT, newSortState).apply();
+                loadTasks();
                 return true;
             }
             return false;
@@ -128,18 +136,64 @@ public class MainActivity extends AppCompatActivity {
         taskDAO = new TaskDAO(this);
         rcvTask = findViewById(R.id.id_recyclerview);
         fab = findViewById(R.id.fab);
-        fab_delete = findViewById(R.id.fab_delete);
         searchView = findViewById(R.id.action_search);
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
-
         fab.setOnClickListener(view -> showCreateBottomDialog());
         bottomNavigationView.setBackground(null);
+        SharedPreferences preferences = getSharedPreferences(PREFS_NAME_QUESTION,MODE_PRIVATE);
+
+        preferences.edit().putBoolean(KEY_SORT,true).apply();
+        preferences.edit().putBoolean(KEY_SHOW_QUESTION_SELECT,true).apply();
+        preferences.edit().putBoolean(KEY_SHOW_QUESTION,true).apply();
 
         setupRecyclerView();
         SearchTask();
-        //event delete task
         setupSwipeToDelete();
     }
+    private void setupRecyclerView(){
+        rcvTask.setLayoutManager(new LinearLayoutManager(this));
+        rcvTask.addItemDecoration(new DividerItemDecoration(this,DividerItemDecoration.VERTICAL));
+    }
+    private void loadTasks() {
+        taskList = taskDAO.getAllTasks();
+        sortTaskname();
+        if (taskList.isEmpty()) {
+            Toast.makeText(this, "There is no data to display", Toast.LENGTH_SHORT).show();
+        }else {
+
+            taskAdapter = new Task_Adapter(taskList);
+            rcvTask.setAdapter(taskAdapter);
+
+            //process event fab click
+            taskAdapter.setOnSelectModeChangeListener(isSelectMode -> {
+                if (isSelectMode) {
+                    toggSelectionFab(2);// Fab delete(selectModeItems)
+                } else {
+                    toggSelectionFab(1);// Fab add
+                }
+            });
+            //event update task
+            taskAdapter.setOnItemClickListener(task -> showUpdateBottomDialog(task));
+        }
+    }
+    //event sort taskname
+    private void sortTaskname(){
+        SharedPreferences preferences = getSharedPreferences(PREFS_NAME_QUESTION, MODE_PRIVATE);
+        boolean isShort = preferences.getBoolean(KEY_SORT,true);
+        if(isShort){
+            Collections.sort(taskList,new sortByTaskName1());
+        }else Collections.sort(taskList,new sortByTaskName2());
+    }
+    // event delete task(selectModeItems)
+    private void deleteSelectedTasks(){
+        List<Task> selectedItems = taskAdapter.getSelectedItems();
+        for (Task task : selectedItems) {
+            taskDAO.deleteTask(task);
+        }
+        taskAdapter.clearSelection();
+        loadTasks();
+    }
+    // xu ly thay doi event cho fab
     private void toggSelectionFab(int item){
         switch (item){
             case 1:
@@ -150,41 +204,11 @@ public class MainActivity extends AppCompatActivity {
             case 2:
                 fab.setBackgroundTintList(ColorStateList.valueOf(Color.RED));
                 fab.setImageResource(android.R.drawable.ic_menu_delete);
-                fab.setOnClickListener(view -> deleteSelectedTasks());
+                fab.setOnClickListener(view -> showQuestionDelete(MainActivity.this,0,2));
                 break;
         }
     }
-    private void loadTasks() {
-        taskList = taskDAO.getAllTasks();
-
-        if (taskList.isEmpty()) {
-            // Hiển thị thông báo nếu không có dữ liệu
-            Toast.makeText(this, "There is no data to display", Toast.LENGTH_SHORT).show();
-        }else {
-            Collections.sort(taskList, new sortByTaskName1());
-            taskAdapter = new Task_Adapter(taskList);
-            rcvTask.setAdapter(taskAdapter);
-
-            // xu ly event update(CRUD)
-            taskAdapter.setOnSelectModeChangeListener(isSelectMode -> {
-                if (isSelectMode) {
-                    toggSelectionFab(2);
-                } else {
-                    toggSelectionFab(1);
-                }
-            });
-
-            taskAdapter.setOnItemClickListener(task -> showUpdateBottomDialog(task));
-        }
-    }
-    private void deleteSelectedTasks(){
-        List<Task> selectedItems = taskAdapter.getSelectedItems();
-        for (Task task : selectedItems) {
-            taskDAO.deleteTask(task);
-        }
-        taskAdapter.clearSelection();
-        loadTasks();
-    }
+    // xy ly sap xep
     private class sortByTaskName1 implements Comparator<Task> {
         @Override
         public int compare(Task task, Task task1) {
@@ -196,10 +220,6 @@ public class MainActivity extends AppCompatActivity {
         public int compare(Task task, Task task1) {
             return task.getTask_name().compareTo(task1.getTask_name()) ;
         }
-    }
-    private void setupRecyclerView(){
-        rcvTask.setLayoutManager(new LinearLayoutManager(this));
-        rcvTask.addItemDecoration(new DividerItemDecoration(this,DividerItemDecoration.VERTICAL));
     }
 
     //tim kiem theo task name hoac assignee
@@ -232,7 +252,8 @@ public class MainActivity extends AppCompatActivity {
             taskAdapter.setFilteredList(filteredListTask);
         }
     }
-    // thiet lap keo luot event xoa
+
+    // thiet lap keo cho event xoa
     private void setupSwipeToDelete() {
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT |  ItemTouchHelper.RIGHT) {
             @Override
@@ -243,45 +264,89 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
                 int i = viewHolder.getAdapterPosition();
-                showQuestionDelete(MainActivity.this,i);
+                showQuestionDelete(MainActivity.this,i,1);
 
             }
         });
         itemTouchHelper.attachToRecyclerView(rcvTask);
     }
-    public void showQuestionDelete(Context context,int i) {
+    //dialog question to delete task(swiped)
+    @SuppressLint("SetTextI18n")
+    public void showQuestionDelete(Context context, int i, int item) {
         SharedPreferences preferences = getSharedPreferences(PREFS_NAME_QUESTION,MODE_PRIVATE);
-        boolean showQuestion = preferences.getBoolean(KEY_SHOW_QUESTION,true);
-        if(!showQuestion)
-        {
-            deleteTask(i);
-            return;
+        boolean showQuestionDeleteswipe = preferences.getBoolean(KEY_SHOW_QUESTION,true);
+        boolean showQuestionDeteleSelect = preferences.getBoolean(KEY_SHOW_QUESTION_SELECT,true);
+        switch (item){
+            case 1:
+                if(!showQuestionDeleteswipe)
+                {
+                    deleteTask(i);
+                    return;
+                }
+                break;
+            case 2:
+                if(!showQuestionDeteleSelect)
+                {
+                    deleteSelectedTasks();
+                    return;
+                }
+                break;
         }
+
         final Dialog dialog = new Dialog(context);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.question_delete_dialog);
 
-        TextView txtContent = dialog.findViewById(R.id.txt_warning);
         Button btnDone = dialog.findViewById(R.id.btn_done);
         Button btnCancel = dialog.findViewById(R.id.btn_cancel);
         CheckBox checkBox = dialog.findViewById(R.id.checkbox_question);
 
-        btnCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                loadTasks();
-                dialog.dismiss();
-            }
-        });
-        btnDone.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(checkBox.isChecked())
-                    preferences.edit().putBoolean(KEY_SHOW_QUESTION,false).apply();
-               deleteTask(i);
-                dialog.dismiss();
-            }
-        });
+        switch (item){
+            case 1:
+                btnDone.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(checkBox.isChecked())
+                            preferences.edit().putBoolean(KEY_SHOW_QUESTION,false).apply();
+                        deleteTask(i);
+                        dialog.dismiss();
+                    }
+                });
+                btnCancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        loadTasks();
+                        dialog.dismiss();
+                    }
+                });
+                break;
+            case 2:
+                TextView txtContent = dialog.findViewById(R.id.txt_warning);
+                ImageView imageView = dialog.findViewById(R.id.image_warning);
+                TextView title_content = dialog.findViewById(R.id.title_warning);
+                imageView.setImageResource(R.drawable.deleteicon);
+                title_content.setText("Delete task");
+                title_content.setTextColor(Color.RED);
+                txtContent.setText("Are you sure you want to delete the selected tasks?");
+                btnDone.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(checkBox.isChecked())
+                            preferences.edit().putBoolean(KEY_SHOW_QUESTION_SELECT,false).apply();
+                        deleteSelectedTasks();
+                        dialog.dismiss();
+                    }
+                });
+                btnCancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        loadTasks();
+                        taskAdapter.clearSelection();
+                        dialog.dismiss();
+                    }
+                });
+                break;
+        }
 
         Window window = dialog.getWindow();
         if (window != null) {
@@ -290,7 +355,7 @@ public class MainActivity extends AppCompatActivity {
         }
         dialog.show();
     }
-    //event delete task
+    //event delete task(swiped)
     private void deleteTask(int i) {
         if(i != RecyclerView.NO_POSITION){
             Task task = taskList.get(i);
@@ -391,7 +456,7 @@ public class MainActivity extends AppCompatActivity {
                         loadTasks();
                         int resulUpdateAssingDev = taskDAO.updateAssignDev(task);
                         if (resulUpdateAssingDev > 0) {
-                            Toast.makeText(dialog.getContext(), "Task updated successfull", Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(dialog.getContext(), "Task updated successfull", Toast.LENGTH_SHORT).show();
                             loadTasks();
                         }
 
@@ -501,7 +566,7 @@ public class MainActivity extends AppCompatActivity {
                         task.setTask_id(taskDAO.searchTaskIDByTaskName(task.getTask_name()));
                         long resultAssginDev = taskDAO.insertAssignDev(task);
                         if (resultAssginDev != -1) {
-                            Toast.makeText(dialog.getContext(), "Task created successfully", Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(dialog.getContext(), "Task created successfully", Toast.LENGTH_SHORT).show();
                             loadTasks();
                             dialog.dismiss();
                         }
@@ -606,7 +671,7 @@ public class MainActivity extends AppCompatActivity {
         }
         return false;
     }
-    //setup warning
+    //setup warning dialog
     public void showWarningDialog(Context context, String taskName) {
         final Dialog dialog = new Dialog(context);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);

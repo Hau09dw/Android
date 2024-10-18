@@ -2,14 +2,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/bottom_back_id"
-        android:title="Back"
-        android:icon="@drawable/back"/>
-
-    <item
         android:id="@+id/bottom_home_id"
         android:title="Home"
         android:icon="@drawable/home" />
+    <item
+        android:id="@+id/bottom_sort_id"
+        android:title="Sort"
+        android:icon="@drawable/sort"/>
 
     <item
         android:title=""
