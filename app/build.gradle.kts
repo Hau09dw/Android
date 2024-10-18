@@ -37,6 +37,7 @@ dependencies {
     implementation(libs.material)
     implementation(libs.activity)
     implementation(libs.constraintlayout)
+    implementation(libs.anychart.android)
     implementation(libs.mpandroidchart)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)

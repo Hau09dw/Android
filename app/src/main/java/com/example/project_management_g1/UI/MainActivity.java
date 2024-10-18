@@ -32,7 +32,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
-import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
@@ -51,8 +50,6 @@ import com.example.project_management_g1.MODEL.setInputEstimateDay;
 import com.example.project_management_g1.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
-import org.w3c.dom.Text;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -119,6 +116,7 @@ public class MainActivity extends AppCompatActivity {
                 showSettingsDialog();
                 return true;
             } else if (itemId == R.id.bottom_ganttchart_id) {
+                showGanttChart();
                 return true;
             } else if (itemId == R.id.bottom_sort_id) {
                 SharedPreferences preferences = getSharedPreferences(PREFS_NAME_QUESTION, MODE_PRIVATE);
@@ -889,5 +887,10 @@ public class MainActivity extends AppCompatActivity {
 
             estimateDay.setVisibility(getEstimateDayState() ? View.VISIBLE : View.INVISIBLE);
         }
+    }
+
+    private void showGanttChart() {
+        Intent intent = new Intent(this, GanttChartActivity.class);
+        startActivity(intent);
     }
 }
