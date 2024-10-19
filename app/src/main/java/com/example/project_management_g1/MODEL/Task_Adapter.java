@@ -1,45 +1,40 @@
 package com.example.project_management_g1.MODEL;
 
 import android.annotation.SuppressLint;
-import android.app.StartForegroundCalledOnStoppedServiceException;
-import android.content.Context;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.example.project_management_g1.DATA.TaskDAO;
 import com.example.project_management_g1.R;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class Task_Adapter  extends RecyclerView.Adapter<Task_Adapter.TaskViewHolder>{
     private List<Task> taskList;
-    private OnItemClickListener listener;
-    boolean isSelectMode = false;
     List<Task> selectModeItems = new ArrayList<>();
+    private OnItemClickListener listener;
     private OnSelectModeChangeListener selectModeChangeListener;
     private boolean showEstimateDay;
+    private boolean isSelectMode = false;
 
     public interface OnItemClickListener{
         void onItemClick(Task item);
     }
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.listener = listener;
+    }
+    // call back toi main: xem lua chon fab nao
     public interface OnSelectModeChangeListener {
         void onSelectModeChanged(boolean isSelectMode);
     }
     public void setOnSelectModeChangeListener(OnSelectModeChangeListener listener) {
         this.selectModeChangeListener = listener;
     }
-
-    public List<Task> getSelectedItems() {
-        return new ArrayList<>(selectModeItems);
-    }
+    // clear selectionMode
+    @SuppressLint("NotifyDataSetChanged")
     public void clearSelection() {
         selectModeItems.clear();
         isSelectMode = false;
@@ -48,16 +43,25 @@ public class Task_Adapter  extends RecyclerView.Adapter<Task_Adapter.TaskViewHol
             selectModeChangeListener.onSelectModeChanged(false);  // Báo về MainActivity
         }
     }
+
     public Task_Adapter(List<Task> tasklist){
         this.taskList = tasklist;
         this.showEstimateDay = true;
     }
 
-    public void setOnItemClickListener(OnItemClickListener listener) {
-        this.listener = listener;
+    public List<Task> getSelectedItems() {
+        return new ArrayList<>(selectModeItems);
     }
+
+    @SuppressLint("NotifyDataSetChanged")
     public void setFilteredList(List<Task> filteredList){
         this.taskList = filteredList;
+        notifyDataSetChanged();
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    public void setShowEstimateDay(boolean show) {
+        this.showEstimateDay = show;
         notifyDataSetChanged();
     }
     // tao view
@@ -69,6 +73,7 @@ public class Task_Adapter  extends RecyclerView.Adapter<Task_Adapter.TaskViewHol
         return new TaskViewHolder(view);
     }
     // gan du lieu
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull TaskViewHolder holder, int position) {
         Task task = taskList.get(position);
@@ -78,13 +83,10 @@ public class Task_Adapter  extends RecyclerView.Adapter<Task_Adapter.TaskViewHol
         holder.estimateday_.setText(task.getEstimaday() + " days");
         holder.startdate_.setText(task.getStartdate());
         holder.enddate_.setText(task.getEnddate());
+        //kiem tra xem có hien thi estimateday khong
         holder.estimateday_.setVisibility(showEstimateDay ? View.VISIBLE : View.INVISIBLE);
     }
 
-    public void setShowEstimateDay(boolean show) {
-        this.showEstimateDay = show;
-        notifyDataSetChanged();
-    }
     @Override
     public int getItemCount() {
         if(taskList != null)

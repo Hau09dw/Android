@@ -80,7 +80,6 @@ public class MainActivity extends AppCompatActivity {
     private BackgroundMusicService musicService;
     private boolean isBound = false;
     private Switch musicSwitch;
-
     private BottomNavigationView bottomNavigationView;
     private boolean wasPlayingBeforePause = false;
     Switch estimateDaySwitch;
@@ -180,7 +179,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
             //event update task
-            taskAdapter.setOnItemClickListener(task -> showUpdateBottomDialog(task));
+            taskAdapter.setOnItemClickListener(this::showUpdateBottomDialog);
         }
 
     }
@@ -221,12 +220,20 @@ public class MainActivity extends AppCompatActivity {
             case 1:
                 fab.setBackgroundTintList(ColorStateList.valueOf(Color.CYAN));
                 fab.setImageResource(R.drawable.floatadd);
-                    fab.setOnClickListener(view -> showCreateBottomDialog());
+                fab.setOnClickListener(view -> {
+                    if (ClickDebouncer.isClickAllowed()) {
+                        showCreateBottomDialog();
+                    }
+                });
                 break;
             case 2:
                 fab.setBackgroundTintList(ColorStateList.valueOf(Color.RED));
                 fab.setImageResource(android.R.drawable.ic_menu_delete);
-                    fab.setOnClickListener(view -> showQuestionDelete(MainActivity.this,0,2));
+                fab.setOnClickListener(view -> {
+                    if (ClickDebouncer.isClickAllowed()) {
+                        showQuestionDelete(MainActivity.this,0,2);
+                    }
+                });
                 break;
         }
     }
