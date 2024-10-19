@@ -112,13 +112,15 @@ public class Task_Adapter  extends RecyclerView.Adapter<Task_Adapter.TaskViewHol
                     return true;
                 }
             });
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+            itemView.setOnClickListener(v -> {
+                if (ClickDebouncer.isClickAllowed()) {
                     if (isSelectMode) {
                         SelectModeClick();
                     } else if (listener != null) {
-                        listener.onItemClick(taskList.get(getAdapterPosition()));
+                        int position = getAdapterPosition();
+                        if (position != RecyclerView.NO_POSITION) {
+                            listener.onItemClick(taskList.get(position));
+                        }
                     }
                 }
             });

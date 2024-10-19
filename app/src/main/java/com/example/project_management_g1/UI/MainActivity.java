@@ -44,6 +44,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.project_management_g1.DATA.TaskDAO;
+import com.example.project_management_g1.MODEL.ClickDebouncer;
 import com.example.project_management_g1.MODEL.Task;
 import com.example.project_management_g1.MODEL.Task_Adapter;
 import com.example.project_management_g1.MODEL.setInputEstimateDay;
@@ -116,9 +117,10 @@ public class MainActivity extends AppCompatActivity {
             } else if (itemId == R.id.bottom_setting_id) {
                 showSettingsDialog();
                 return true;
-            } else if (itemId == R.id.bottom_ganttchart_id) {
-                showGanttChart();
-                return true;
+            } else if (ClickDebouncer.isClickAllowed())
+                    if (itemId == R.id.bottom_ganttchart_id) {
+                        showGanttChart();
+                        return true;
             } else if (itemId == R.id.bottom_sort_id) {
                 SharedPreferences preferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
                 boolean currentSortState = preferences.getBoolean(KEY_SORT, true);
@@ -137,7 +139,11 @@ public class MainActivity extends AppCompatActivity {
         fab = findViewById(R.id.fab);
         searchView = findViewById(R.id.action_search);
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
-        fab.setOnClickListener(view -> showCreateBottomDialog());
+        fab.setOnClickListener(view -> {
+            if (ClickDebouncer.isClickAllowed()) {
+                showCreateBottomDialog();
+            }
+        });
         bottomNavigationView.setBackground(null);
         SharedPreferences preferences = getSharedPreferences(PREFS_NAME,MODE_PRIVATE);
 
@@ -215,12 +221,12 @@ public class MainActivity extends AppCompatActivity {
             case 1:
                 fab.setBackgroundTintList(ColorStateList.valueOf(Color.CYAN));
                 fab.setImageResource(R.drawable.floatadd);
-                fab.setOnClickListener(view -> showCreateBottomDialog());
+                    fab.setOnClickListener(view -> showCreateBottomDialog());
                 break;
             case 2:
                 fab.setBackgroundTintList(ColorStateList.valueOf(Color.RED));
                 fab.setImageResource(android.R.drawable.ic_menu_delete);
-                fab.setOnClickListener(view -> showQuestionDelete(MainActivity.this,0,2));
+                    fab.setOnClickListener(view -> showQuestionDelete(MainActivity.this,0,2));
                 break;
         }
     }
