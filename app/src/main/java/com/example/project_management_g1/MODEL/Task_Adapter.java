@@ -1,5 +1,6 @@
 package com.example.project_management_g1.MODEL;
 
+import android.annotation.SuppressLint;
 import android.app.StartForegroundCalledOnStoppedServiceException;
 import android.content.Context;
 import android.graphics.Color;
@@ -24,6 +25,7 @@ public class Task_Adapter  extends RecyclerView.Adapter<Task_Adapter.TaskViewHol
     boolean isSelectMode = false;
     List<Task> selectModeItems = new ArrayList<>();
     private OnSelectModeChangeListener selectModeChangeListener;
+    private boolean showEstimateDay;
 
     public interface OnItemClickListener{
         void onItemClick(Task item);
@@ -48,7 +50,7 @@ public class Task_Adapter  extends RecyclerView.Adapter<Task_Adapter.TaskViewHol
     }
     public Task_Adapter(List<Task> tasklist){
         this.taskList = tasklist;
-        notifyDataSetChanged();
+        this.showEstimateDay = true;
     }
 
     public void setOnItemClickListener(OnItemClickListener listener) {
@@ -76,8 +78,13 @@ public class Task_Adapter  extends RecyclerView.Adapter<Task_Adapter.TaskViewHol
         holder.estimateday_.setText(task.getEstimaday() + " days");
         holder.startdate_.setText(task.getStartdate());
         holder.enddate_.setText(task.getEnddate());
+        holder.estimateday_.setVisibility(showEstimateDay ? View.VISIBLE : View.INVISIBLE);
     }
 
+    public void setShowEstimateDay(boolean show) {
+        this.showEstimateDay = show;
+        notifyDataSetChanged();
+    }
     @Override
     public int getItemCount() {
         if(taskList != null)

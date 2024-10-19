@@ -14,9 +14,12 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.text.Editable;
+import android.text.PrecomputedText;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -49,6 +52,8 @@ import com.example.project_management_g1.MODEL.Task_Adapter;
 import com.example.project_management_g1.MODEL.setInputEstimateDay;
 import com.example.project_management_g1.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.text.ParseException;
@@ -63,10 +68,12 @@ import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
-    private static final String PREFS_NAME_QUESTION = "app_preferences";
+    private static final String PREFS_NAME = "app_preferences";
     private static final String KEY_SHOW_QUESTION = "show_question_dialog";
     private static final String KEY_SHOW_QUESTION_SELECT = "show_question_select_dialog";
+    private static final String KEY_ESTIMATEDAY = "key_estimateday";
     private static final String KEY_SORT = "key_sort";
+    private static final String MUSIC_STATE = "MusicState";
     private RecyclerView rcvTask;
     private Task_Adapter taskAdapter;
     private TaskDAO taskDAO;
@@ -77,11 +84,10 @@ public class MainActivity extends AppCompatActivity {
     private BackgroundMusicService musicService;
     private boolean isBound = false;
     private Switch musicSwitch;
-    private static final String PREFS_NAME = "MusicPrefs";
-    private static final String MUSIC_STATE = "MusicState";
+
     private BottomNavigationView bottomNavigationView;
     private boolean wasPlayingBeforePause = false;
-
+    Switch estimateDaySwitch;
     EditText txt_taskname, txt_assignee, txt_estimaday, txt_startdate, txt_enddate;
     ImageButton btnStartdate, btnEnddate;
     Button btn_confirm;
@@ -119,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
                 showGanttChart();
                 return true;
             } else if (itemId == R.id.bottom_sort_id) {
-                SharedPreferences preferences = getSharedPreferences(PREFS_NAME_QUESTION, MODE_PRIVATE);
+                SharedPreferences preferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
                 boolean currentSortState = preferences.getBoolean(KEY_SORT, true);
                 boolean newSortState = !currentSortState;
                 preferences.edit().putBoolean(KEY_SORT, newSortState).apply();
@@ -138,7 +144,7 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
         fab.setOnClickListener(view -> showCreateBottomDialog());
         bottomNavigationView.setBackground(null);
-        SharedPreferences preferences = getSharedPreferences(PREFS_NAME_QUESTION,MODE_PRIVATE);
+        SharedPreferences preferences = getSharedPreferences(PREFS_NAME,MODE_PRIVATE);
 
         preferences.edit().putBoolean(KEY_SORT,true).apply();
         preferences.edit().putBoolean(KEY_SHOW_QUESTION_SELECT,true).apply();
@@ -147,6 +153,7 @@ public class MainActivity extends AppCompatActivity {
         setupRecyclerView();
         SearchTask();
         setupSwipeToDelete();
+
     }
     private void setupRecyclerView(){
         rcvTask.setLayoutManager(new LinearLayoutManager(this));
@@ -155,13 +162,14 @@ public class MainActivity extends AppCompatActivity {
     private void loadTasks() {
         taskList = taskDAO.getAllTasks();
         sortTaskname();
+
         if (taskList.isEmpty()) {
             Toast.makeText(this, "There is no data to display", Toast.LENGTH_SHORT).show();
         }else {
 
             taskAdapter = new Task_Adapter(taskList);
             rcvTask.setAdapter(taskAdapter);
-
+            updateEstimateDayVisibility();
             //process event fab click
             taskAdapter.setOnSelectModeChangeListener(isSelectMode -> {
                 if (isSelectMode) {
@@ -173,11 +181,12 @@ public class MainActivity extends AppCompatActivity {
             //event update task
             taskAdapter.setOnItemClickListener(task -> showUpdateBottomDialog(task));
         }
+
     }
 
     //event sort taskname
     private void sortTaskname(){
-        SharedPreferences preferences = getSharedPreferences(PREFS_NAME_QUESTION, MODE_PRIVATE);
+        SharedPreferences preferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
         boolean isShort = preferences.getBoolean(KEY_SORT,true);
         if(isShort){
             Collections.sort(taskList,new sortByTaskName1());
@@ -272,7 +281,7 @@ public class MainActivity extends AppCompatActivity {
     //dialog question to delete task
     @SuppressLint("SetTextI18n")
     public void showQuestionDelete(Context context, int i, int item) {
-        SharedPreferences preferences = getSharedPreferences(PREFS_NAME_QUESTION,MODE_PRIVATE);
+        SharedPreferences preferences = getSharedPreferences(PREFS_NAME,MODE_PRIVATE);
         boolean showQuestionDeleteswipe = preferences.getBoolean(KEY_SHOW_QUESTION,true);
         boolean showQuestionDeteleSelect = preferences.getBoolean(KEY_SHOW_QUESTION_SELECT,true);
         switch (item){
@@ -397,40 +406,6 @@ public class MainActivity extends AppCompatActivity {
         task.setTask_id(taskDAO.searchTaskIDByTaskName(task.getTask_name()));
         task.setDevtask_id(taskDAO.searchDevIDByTaskId(task.getTask_id()));
         //constrain
-        txt_taskname.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-            @Override
-            public void afterTextChanged(Editable editable) {
-                validateTaskName(txt_taskname,task);
-            }
-        });
-        txt_assignee.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-            @Override
-            public void afterTextChanged(Editable editable) {
-                if(checkAssignee(txt_assignee,task)){
-                    if(checkOverLap(task)){
-                        showWarningDialog(dialog.getContext(), task.getTask_name());
-                    }
-
-                }
-            }
-
-        });
         constrainStartAndEndDate(txt_startdate,txt_enddate,txt_estimaday,1);
         constrainStartAndEndDate(txt_enddate,txt_startdate,txt_estimaday,2);
         setInputEstimateDay.setNonNagativeIntegerInput(txt_estimaday,txt_startdate,txt_enddate);
@@ -520,6 +495,7 @@ public class MainActivity extends AppCompatActivity {
         btnEnddate = dialog.findViewById(R.id.btn_create_EndDate);
         btn_confirm = dialog.findViewById(R.id.button_create);
         cancelButton = dialog.findViewById(R.id.cancelButton);
+
         Task task = new Task();
         //constrain
         txt_taskname.addTextChangedListener(new TextWatcher() {
@@ -541,7 +517,6 @@ public class MainActivity extends AppCompatActivity {
         constrainStartAndEndDate(txt_startdate, txt_enddate, txt_estimaday, 1);
         constrainStartAndEndDate(txt_enddate, txt_startdate, txt_estimaday, 2);
         setInputEstimateDay.setNonNagativeIntegerInput(txt_estimaday, txt_startdate, txt_enddate);
-
         //xu ly button
         btn_confirm.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -606,7 +581,6 @@ public class MainActivity extends AppCompatActivity {
             window.setGravity(Gravity.BOTTOM);
         }
         dialog.show();
-
     }
 
     //rang buoc startdate-enddate-estimateday
@@ -636,7 +610,7 @@ public class MainActivity extends AppCompatActivity {
                 if(a >= 0){
                 estimateday.setText(String.valueOf(a));
                 } else if (a == -1) {
-                estimateday.setText(" ");
+                estimateday.setText("");
                 edittext1.setText("");
                 edittext1.setError("");
             }}
@@ -783,6 +757,9 @@ public class MainActivity extends AppCompatActivity {
     };
     private void showSettingsDialog()
     {
+        SharedPreferences preferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+        boolean isEstimateDayVisible = preferences.getBoolean(KEY_ESTIMATEDAY, true);
+
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.setting);
@@ -804,7 +781,8 @@ public class MainActivity extends AppCompatActivity {
         } else {
             Log.e("MainActivity", "musicSwitch not found in settings layout");
         }
-        Switch estimateDaySwitch = dialog.findViewById(R.id.estimateDaySwitch);
+        estimateDaySwitch = dialog.findViewById(R.id.estimateDaySwitch);
+        estimateDaySwitch.setChecked(isEstimateDayVisible);
         if (estimateDaySwitch != null) {
             estimateDaySwitch.setChecked(getEstimateDayState());
             estimateDaySwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
@@ -815,14 +793,7 @@ public class MainActivity extends AppCompatActivity {
             Log.e("MainActivity", "estimateDaySwitch not found in settings layout");
         }
         cancelButton = dialog.findViewById(R.id.cancelMusicButton);
-        if (cancelButton != null) {
-            cancelButton.setOnClickListener(view -> dialog.dismiss());
-        } else {
-            Log.e("MainActivity", "cancelButton not found in settings layout");
-            // Thêm một cách khác để đóng dialog nếu nút cancel không tồn tại
-            dialog.setOnCancelListener(dialogInterface -> dialogInterface.dismiss());
-        }
-
+        cancelButton.setOnClickListener(view -> dialog.dismiss());
         Window window = dialog.getWindow();
         if (window != null) {
             window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT,
@@ -844,15 +815,13 @@ public class MainActivity extends AppCompatActivity {
         editor.apply();
     }
     private boolean getEstimateDayState(){
-        SharedPreferences estimate = getSharedPreferences("EstimateDay",0);
-        return estimate.getBoolean("On",true);
+        SharedPreferences estimate = getSharedPreferences(PREFS_NAME,MODE_PRIVATE);
+        return estimate.getBoolean(KEY_ESTIMATEDAY,true);
     }
     private void saveEstimateDayState(boolean state)
     {
-        SharedPreferences estimate = getSharedPreferences("EstimateDay",0);
-        SharedPreferences.Editor editor = estimate.edit();
-        editor.putBoolean("On",state);
-        editor.apply();
+        SharedPreferences estimate = getSharedPreferences(PREFS_NAME,MODE_PRIVATE);
+        estimate.edit().putBoolean(KEY_ESTIMATEDAY,state).apply();;
     }
     @Override
     protected void onPause() {
@@ -882,13 +851,17 @@ public class MainActivity extends AppCompatActivity {
         }
     }
     private void updateEstimateDayVisibility() {
-        estimateDay = findViewById(R.id.item_estimateday);
-        if (estimateDay != null) {
-
-            estimateDay.setVisibility(getEstimateDayState() ? View.VISIBLE : View.INVISIBLE);
+        SharedPreferences preferences = getSharedPreferences(PREFS_NAME,MODE_PRIVATE);
+        boolean isVisible = preferences.getBoolean(KEY_ESTIMATEDAY,true);
+        if (taskAdapter != null) {
+            taskAdapter.setShowEstimateDay(isVisible);
         }
     }
 
+    // Helper method to get the view for a specific position
+    private View getViewByPosition(int position, RecyclerView recyclerView) {
+        return recyclerView.getLayoutManager().findViewByPosition(position);
+    }
     private void showGanttChart() {
         Intent intent = new Intent(this, GanttChartActivity.class);
         startActivity(intent);

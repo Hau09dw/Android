@@ -15,16 +15,23 @@ public class setInputEstimateDay {
         estimateDay.setFilters(new InputFilter[]{
                  new InputFilter() {
                      @Override
-                     public CharSequence filter(CharSequence charSequence, int start, int end, Spanned spanned, int i2, int i3) {
+                     public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
+                         // Result String
+                         StringBuilder builder = new StringBuilder();
                          for (int i = start; i < end; i++) {
-                             if (!Character.isDigit(charSequence.charAt(i))) {
-                                 return "";
+                             char c = source.charAt(i);
+                             if (Character.isDigit(c)) {
+                                 builder.append(c);
                              }
                          }
-                         return null;
+                         // toan bo ki tu nhap vao la so-> exit the filter
+                         if (builder.length() == end - start) {
+                             return null;
+                         }
+                        return  builder.length() == 0 ? "" : builder.toString(); // ket qua sau khi loc
                      }
                  }
-         });
+        });
         estimateDay.addTextChangedListener(new TextWatcher() {
              @Override
              public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -38,7 +45,11 @@ public class setInputEstimateDay {
 
              @Override
              public void afterTextChanged(Editable editable) {
-                    String txt = editable.toString() ;
+                    String txt = editable.toString().trim() ;
+                    if(txt.length()>4){
+                        editable.delete(4,txt.length());
+                        txt = editable.toString();
+                    }
                     while(txt.startsWith("0")){
                         editable.delete(0,1);
                         txt = editable.toString();
