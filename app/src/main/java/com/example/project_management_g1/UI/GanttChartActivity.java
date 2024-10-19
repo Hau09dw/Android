@@ -23,7 +23,6 @@ import java.util.List;
 
 
 public class GanttChartActivity extends AppCompatActivity {
-    private AnyChartView mGanttChart;
     private List<Task> taskList;
 
 
@@ -41,8 +40,8 @@ public class GanttChartActivity extends AppCompatActivity {
         //sort by dev's name
         taskList.sort(Comparator.comparing(Task::getAssignee));
         //Begin to create Gantt Chart
-        mGanttChart = findViewById(R.id.any_chart_view);
-        mGanttChart.setProgressBar(findViewById(R.id.progress_bar));
+        AnyChartView ganttChart = findViewById(R.id.any_chart_view);
+        ganttChart.setProgressBar(findViewById(R.id.progress_bar));
         Resource gantt_chart = AnyChart.resource();
 
         //gantt chart Setups
@@ -65,7 +64,7 @@ public class GanttChartActivity extends AppCompatActivity {
 
         gantt_chart.data(data);
 
-        mGanttChart.setChart(gantt_chart);
+        ganttChart.setChart(gantt_chart);
     }
 
     private void addDataToGanttChart(List<DataEntry> data) {
