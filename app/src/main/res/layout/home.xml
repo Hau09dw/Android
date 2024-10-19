@@ -5,28 +5,28 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/transparent"
     android:orientation="vertical"
-    tools:context=".UI.MainActivity">
+    tools:context=".UI.MainActivity"
+    android:background="@color/white">
 
-    <FrameLayout
-        android:id="@+id/scrollView2"
+    <ScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@id/co_layout"
+        android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        tools:layout_editor_absoluteY="97dp">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/contranintLayout_header"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:id="@+id/contranintLayout_header"
+                android:layout_height="match_parent">
 
                 <View
                     android:id="@+id/id_home_title"
@@ -58,13 +58,14 @@
                     android:layout_height="35dp"
                     android:layout_margin="9dp"
                     android:background="@drawable/ic_custom_search"
-                    app:iconifiedByDefault="false"
                     app:layout_constraintBottom_toBottomOf="@+id/id_home_title"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="1.0"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/editText"
-                    app:queryHint="Search..." />
+                    app:queryHint="Search..."
+                    app:iconifiedByDefault="false"
+                    />
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -72,9 +73,9 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
                 android:orientation="horizontal"
-                android:paddingTop="10dp">
+                android:paddingTop="10dp"
+                android:layout_margin="10dp">
 
                 <TextView
                     android:id="@+id/textView"
@@ -83,8 +84,9 @@
                     android:layout_weight="1"
                     android:text="@string/task_name"
                     android:textColor="#F44336"
+                    android:textStyle="bold"
                     android:textSize="15sp"
-                    android:textStyle="bold" />
+                    />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -98,17 +100,18 @@
                         android:layout_height="wrap_content"
                         android:text="@string/assignee"
                         android:textColor="#0091EA"
+                        android:textStyle="bold"
                         android:textSize="15sp"
-                        android:textStyle="bold" />
+                        />
 
                     <TextView
                         android:id="@+id/textView4"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/startdate"
                         android:textColor="#F7CE68"
-                        android:textSize="15sp"
-                        android:textStyle="bold" />
+                        android:text="@string/startdate"
+                        android:textStyle="bold"
+                        android:textSize="15sp"/>
 
                 </LinearLayout>
 
@@ -116,7 +119,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    >
 
                     <TextView
                         android:id="@+id/textView5"
@@ -124,52 +128,48 @@
                         android:layout_height="wrap_content"
                         android:text="@string/estimate_day"
                         android:textColor="#62E219"
+                        android:textStyle="bold"
                         android:textSize="15sp"
-                        android:textStyle="bold" />
+                        />
 
                     <TextView
                         android:id="@+id/textView6"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/end_date"
                         android:textColor="#F7CE68"
+                        android:text="@string/end_date"
+                        android:textStyle="bold"
                         android:textSize="15sp"
-                        android:textStyle="bold" />
+                        />
                 </LinearLayout>
             </LinearLayout>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/id_recyclerview"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="470dp"
                 android:layout_margin="10dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
 
 
         </LinearLayout>
-    </FrameLayout>
-
+    </ScrollView>
     <androidx.coordinatorlayout.widget.CoordinatorLayout
-        android:id="@+id/co_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="32dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/scrollView2">
+        android:layout_height="match_parent"
+        >
 
         <com.google.android.material.bottomappbar.BottomAppBar
             android:id="@+id/bottomAppBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:layout_marginTop="24dp"
             android:background="@color/white"
             app:fabCradleMargin="9dp"
             app:fabCradleRoundedCornerRadius="50dp"
-            app:fabCradleVerticalOffset="5dp">
+            app:fabCradleVerticalOffset="5dp"
+            >
 
             <com.google.android.material.bottomnavigation.BottomNavigationView
                 android:id="@+id/bottomNavigationView"
@@ -177,24 +177,23 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="20dp"
                 android:background="@android:color/transparent"
-                android:paddingTop="15dp"
-                app:elevation="0dp"
                 app:labelVisibilityMode="labeled"
-                app:menu="@menu/bottom_menu" />
+                app:menu="@menu/bottom_menu"
+                app:elevation="0dp"
+                />
         </com.google.android.material.bottomappbar.BottomAppBar>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:contentDescription="@string/fab"
             android:src="@drawable/floatadd"
-            app:backgroundTint="@color/cyan"
-            app:layout_anchor="@+id/bottomAppBar"
-            app:layout_anchorGravity="top|center"
+            app:layout_anchor="@id/bottomAppBar"
             app:maxImageSize="40dp"
-            app:tint="@color/black" />
+            android:id="@+id/fab"
+            android:contentDescription="@string/fab"
+            app:tint="@color/black"
+            android:layout_gravity="center"
+            app:backgroundTint="@color/cyan"/>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
