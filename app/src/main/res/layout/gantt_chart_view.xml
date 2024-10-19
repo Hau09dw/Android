@@ -1,189 +1,217 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".UI.GanttChartActivity">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="15dp">
+        android:layout_height="wrap_content">
 
         <TextView
             android:id="@+id/label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="start"
+            android:layout_marginStart="30dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginEnd="121dp"
+            android:layout_marginRight="121dp"
             android:paddingBottom="13dp"
             android:text="@string/gantt_chart"
             android:textColor="@color/design_default_color_secondary_variant"
             android:textSize="30sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/exit_btn_gantt"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <Space
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="25dp"
-            tools:visibility="invisible">
-
-        </Space>
 
         <ImageView
             android:id="@+id/exit_btn_gantt"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center|end"
-            android:layout_marginStart="60dp"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
             android:contentDescription="@string/exit_btn"
             android:onClick="exitGanttChart"
-            android:scaleType="fitCenter"
-            android:src="@android:drawable/ic_delete" />
+            android:paddingEnd="30dp"
+            android:scaleType="fitEnd"
+            android:src="@android:drawable/ic_delete"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/label"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <View
         android:layout_width="wrap_content"
         android:layout_height="2dp"
         android:background="@color/black" />
 
-    <LinearLayout
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="match_parent"
+        android:overScrollMode="ifContentScrolls"
+        android:scrollIndicators="left"
+        android:scrollbarStyle="outsideOverlay">
 
         <LinearLayout
-            android:id="@+id/layout_from_date"
             android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:layout_marginTop="10dp"
-            android:orientation="vertical"
-            android:padding="10dp">
-
-            <TextView
-                android:id="@+id/lbl_fromDate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/from_date"
-                android:textColor="@color/cardview_dark_background"
-                android:textSize="20sp"
-                android:textStyle="bold" />
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <EditText
-                    android:id="@+id/txt_fromDate"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/ic_custom_create_edittext"
-                    android:enabled="false"
-                    android:hint="@string/ex_yyyy_mm_dd"
-                    android:inputType="text"
-                    android:paddingStart="5dp"
-                    android:textColor="@color/black"
-                    android:textColorHint="#868687"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/btn_fromDate"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.0"
-                    tools:ignore="TextFields" />
-
-                <ImageButton
-                    android:id="@+id/btn_fromDate"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:contentDescription="@string/calendar_fromdate"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/calendar" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/layout_to_date"
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:layout_marginTop="10dp"
-            android:orientation="vertical"
-            android:padding="10dp">
-
-            <TextView
-                android:id="@+id/lbl_toDate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/to_date"
-                android:textColor="@color/cardview_dark_background"
-                android:textSize="20sp"
-                android:textStyle="bold" />
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <EditText
-                    android:id="@+id/txt_toDate"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/ic_custom_create_edittext"
-                    android:enabled="false"
-                    android:hint="@string/ex_yyyy_mm_dd"
-                    android:inputType="text"
-                    android:paddingStart="5dp"
-                    android:textColor="@color/black"
-                    android:textColorHint="#868687"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/btn_toDate"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.0"
-                    tools:ignore="TextFields" />
-
-                <ImageButton
-                    android:id="@+id/btn_toDate"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:contentDescription="@string/calendar_fromdate"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/calendar" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-        </LinearLayout>
-
-        <Button
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:text="@string/filter">
+            android:orientation="vertical">
 
-        </Button>
-    </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-    <ProgressBar
-        android:id="@+id/progress_bar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+                <LinearLayout
+                    android:id="@+id/layout_from_date"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:layout_marginTop="10dp"
+                    android:orientation="vertical"
+                    android:padding="10dp">
 
-    <com.anychart.AnyChartView
-        android:id="@+id/any_chart_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+                    <TextView
+                        android:id="@+id/lbl_fromDate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/from_date"
+                        android:textColor="@color/cardview_dark_background"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
 
-    </com.anychart.AnyChartView>
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <EditText
+                            android:id="@+id/txt_fromDate"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/ic_custom_create_edittext"
+                            android:enabled="false"
+                            android:hint="@string/ex_yyyy_mm_dd"
+                            android:inputType="text"
+                            android:paddingStart="5dp"
+                            android:textColor="@color/black"
+                            android:textColorHint="#868687"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toStartOf="@+id/btn_fromDate"
+                            app:layout_constraintHorizontal_bias="0.0"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintVertical_bias="0.0"
+                            tools:ignore="TextFields" />
+
+                        <ImageButton
+                            android:id="@+id/btn_fromDate"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:contentDescription="@string/calendar_fromdate"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:srcCompat="@drawable/calendar"
+                            app:tint="#FF3B00" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/layout_to_date"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:layout_marginTop="10dp"
+                    android:orientation="vertical"
+                    android:padding="10dp">
+
+                    <TextView
+                        android:id="@+id/lbl_toDate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/to_date"
+                        android:textColor="@color/cardview_dark_background"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <EditText
+                            android:id="@+id/txt_toDate"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/ic_custom_create_edittext"
+                            android:enabled="false"
+                            android:hint="@string/ex_yyyy_mm_dd"
+                            android:inputType="text"
+                            android:paddingStart="5dp"
+                            android:textColor="@color/black"
+                            android:textColorHint="#868687"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toStartOf="@+id/btn_toDate"
+                            app:layout_constraintHorizontal_bias="0.0"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintVertical_bias="0.0"
+                            tools:ignore="TextFields" />
+
+                        <ImageButton
+                            android:id="@+id/btn_toDate"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:contentDescription="@string/calendar_fromdate"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:srcCompat="@drawable/calendar"
+                            app:tint="#FF3B00" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/btn_filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_marginEnd="20dp"
+                    android:backgroundTint="#4EB6E2"
+                    android:text="@string/filter">
+
+                </Button>
+            </LinearLayout>
+
+            <ProgressBar
+                android:id="@+id/progress_bar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <com.anychart.AnyChartView
+                android:id="@+id/any_chart_view"
+                android:layout_width="match_parent"
+                android:layout_height="638dp"
+                android:descendantFocusability="blocksDescendants"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:overScrollMode="ifContentScrolls"
+                android:scrollIndicators="top|bottom|start|end"
+                android:scrollbarSize="5dp">
+
+            </com.anychart.AnyChartView>
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 
 </LinearLayout>

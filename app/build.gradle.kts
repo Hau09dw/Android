@@ -40,6 +40,7 @@ dependencies {
     implementation(libs.anychart.android)
     implementation(libs.mpandroidchart)
     implementation(libs.fragment)
+    implementation(libs.legacy.support.v4)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)

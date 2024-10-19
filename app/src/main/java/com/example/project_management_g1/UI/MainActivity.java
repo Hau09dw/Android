@@ -707,13 +707,13 @@ public class MainActivity extends AppCompatActivity {
         return -2;
     }
     //datetpicker
-    private void showDialogDatepicker(final EditText editText){
+    public static void showDialogDatepicker(final EditText editText){
         Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH);
         int dayOfMonth = calendar.get(Calendar.DATE);
 
-        DatePickerDialog datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+        DatePickerDialog datePickerDialog = new DatePickerDialog(editText.getContext(), new DatePickerDialog.OnDateSetListener() {
             @SuppressLint("SetTextI18n")
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {

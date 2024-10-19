@@ -2,8 +2,10 @@ package com.example.project_management_g1.UI;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -34,6 +36,9 @@ public class GanttChartActivity extends AppCompatActivity {
     ImageButton btn_toDate;
     EditText txt_fromDate;
     EditText txt_toDate;
+    Button btn_filter;
+    Resource gantt_chart;
+    AnyChartView ganttChart;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -47,14 +52,45 @@ public class GanttChartActivity extends AppCompatActivity {
         //sort by dev's name
         taskList.sort(Comparator.comparing(Task::getAssignee));
         //Begin to create Gantt Chart
-        AnyChartView ganttChart = findViewById(R.id.any_chart_view);
+        ganttChart = findViewById(R.id.any_chart_view);
         ganttChart.setProgressBar(findViewById(R.id.progress_bar));
         btn_fromDate = findViewById(R.id.btn_fromDate);
         btn_toDate = findViewById(R.id.btn_toDate);
         txt_fromDate = findViewById(R.id.txt_fromDate);
         txt_toDate = findViewById(R.id.txt_toDate);
-        Resource gantt_chart = AnyChart.resource();
+        btn_filter = findViewById(R.id.btn_filter);
+        gantt_chart = AnyChart.resource();
 
+        txt_fromDate.setFocusable(false);
+
+        btn_fromDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                txt_fromDate.setFocusable(false);
+                MainActivity.showDialogDatepicker(txt_fromDate);
+            }
+        });
+        btn_toDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                txt_toDate.setFocusable(false);
+                MainActivity.showDialogDatepicker(txt_toDate);
+            }
+        });
+        btn_filter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ganttChart.clear();
+                filterGanttChart(txt_fromDate.getText().toString(), txt_toDate.getText().toString());
+                List<DataEntry> filtered_data = new ArrayList<>();
+                addDataToGanttChart(filtered_data);
+                Resource new_gantt = AnyChart.resource();
+                new_gantt.data(filtered_data);
+                new_gantt.autoRedraw();
+                ganttChart.setChart(new_gantt);
+                ganttChart.invalidate();
+            }
+        });
         //gantt chart Setups
         gantt_chart.zoomLevel(1d)
                 .timeTrackingMode(TimeTrackingMode.AVAILABILITY_PER_CHART);
@@ -74,7 +110,7 @@ public class GanttChartActivity extends AppCompatActivity {
         addDataToGanttChart(data);
 
         gantt_chart.data(data);
-
+        gantt_chart.autoRedraw();
         ganttChart.setChart(gantt_chart);
     }
 
@@ -170,20 +206,39 @@ public class GanttChartActivity extends AppCompatActivity {
         Date dateFrom = convertStringToDate(fromDate);
         Date dateTo = convertStringToDate(toDate);
 
+        if(!validateInput(dateFrom, dateTo))
+            return;
         if(!fromDate.isEmpty() && !toDate.isEmpty()){
             if(taskList.size()<=0)
                 return;
+            List<Task> copy =  new ArrayList<>(taskList);
             for (Task task : taskList) {
                 Date startDate = convertStringToDate(task.getStartdate());
                 Date endDate = convertStringToDate(task.getEnddate());
                 if( startDate != null && endDate != null) {
                     if (startDate.compareTo(dateFrom) < 0 || endDate.compareTo(dateTo) > 0) {
-                        taskList.remove(task);
+                        copy.remove(task);
                     }
                 }
             }
+            taskList.clear();
+            taskList.addAll(copy);
         }
         return;
+    }
+
+    private boolean validateInput(Date dateFrom, Date dateTo) {
+        if(dateFrom == null || dateTo == null){
+            Toast.makeText(this, "Null date or can't parse date", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if(dateFrom.compareTo(dateTo) > 0){
+            Toast.makeText(this, "Invalid date", Toast.LENGTH_LONG).show();
+            txt_fromDate.setText("");
+            txt_toDate.setText("");
+            return false;
+        }
+        return true;
     }
 
     public static Date convertStringToDate(String dateString) {
