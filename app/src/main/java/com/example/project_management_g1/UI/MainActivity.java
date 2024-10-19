@@ -14,12 +14,9 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.text.Editable;
-import android.text.PrecomputedText;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.GestureDetector;
 import android.view.Gravity;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -52,8 +49,6 @@ import com.example.project_management_g1.MODEL.Task_Adapter;
 import com.example.project_management_g1.MODEL.setInputEstimateDay;
 import com.example.project_management_g1.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.bottomsheet.BottomSheetBehavior;
-import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.text.ParseException;
@@ -722,7 +717,13 @@ public class MainActivity extends AppCompatActivity {
             @SuppressLint("SetTextI18n")
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
-                editText.setText(year+"/"+(month+1)+"/"+dayOfMonth);
+                Calendar calendar = Calendar.getInstance();
+                calendar.set(year, month, dayOfMonth);
+                // Define the desired date format
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd", Locale.getDefault());
+
+                String format_date = dateFormat.format(calendar.getTime());
+                editText.setText(format_date);
             }
         },year,month,dayOfMonth);
         datePickerDialog.show();
