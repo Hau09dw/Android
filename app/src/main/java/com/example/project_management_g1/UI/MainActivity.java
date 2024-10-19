@@ -41,8 +41,6 @@ import androidx.appcompat.widget.SearchView;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -865,11 +863,7 @@ public class MainActivity extends AppCompatActivity {
         return recyclerView.getLayoutManager().findViewByPosition(position);
     }
     private void showGanttChart() {
-        FragmentManager fragManager = getSupportFragmentManager();
-        FragmentTransaction fragTransaction = fragManager.beginTransaction();
-        fragTransaction.replace(R.id.scrollView2,  GanttChartActivity.class,null)
-                .setReorderingAllowed(true)
-                .addToBackStack(null)
-                .commit();
+        Intent intent = new Intent(this, GanttChartActivity.class);
+        startActivity(intent);
     }
 }

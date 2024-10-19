@@ -1,14 +1,9 @@
 package com.example.project_management_g1.UI;
 
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ProgressBar;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.anychart.AnyChart;
 import com.anychart.AnyChartView;
@@ -27,37 +22,27 @@ import java.util.Comparator;
 import java.util.List;
 
 
-public class GanttChartActivity extends Fragment {
+public class GanttChartActivity extends AppCompatActivity {
     private AnyChartView mGanttChart;
-    private ProgressBar mProgressBar;
-    private TaskDAO taskDAO;
     private List<Task> taskList;
 
 
-    public GanttChartActivity() {
-        super(R.layout.gantt_chart_view);
-    }
 
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.gantt_chart_view, container, false);
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        setContentView(R.layout.gantt_chart_view);
         //Initialize variables and get data from DB
-        taskDAO = new TaskDAO(this.getContext());
+        TaskDAO taskDAO = new TaskDAO(this);
 
         taskList = new ArrayList<Task>();
         taskList = taskDAO.getAllTasks();
         //sort by dev's name
         taskList.sort(Comparator.comparing(Task::getAssignee));
         //Begin to create Gantt Chart
-        mGanttChart = mGanttChart.findViewById(R.id.any_chart_view);
-        mGanttChart.setProgressBar(mProgressBar.findViewById(R.id.progress_bar));
+        mGanttChart = findViewById(R.id.any_chart_view);
+        mGanttChart.setProgressBar(findViewById(R.id.progress_bar));
         Resource gantt_chart = AnyChart.resource();
 
         //gantt chart Setups
@@ -124,6 +109,10 @@ public class GanttChartActivity extends Fragment {
             }
 
         }
+    }
+
+    public void exitGanttChart(View view) {
+        this.finish();
     }
 
     //name: Developer's name
