@@ -34,7 +34,7 @@
             android:layout_height="43dp"
             android:layout_marginEnd="16dp"
             android:contentDescription="@string/cancel_button"
-            android:src="@drawable/ic_baseline_clear_24"
+            android:src="@android:drawable/ic_delete"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

@@ -11,3 +11,8 @@ as task creation and tracking, task assignment, progress monitoring, and team co
 + Task Creation and Assignment
 + Project Progress Tracking
 + Real-time Notifications
++ Search Functionality
++ Data Management
++ Customization Options
++ Music Playback
++ Schedule Management
