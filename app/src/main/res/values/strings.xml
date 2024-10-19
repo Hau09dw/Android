@@ -21,7 +21,7 @@
     <string name="ex_kaushik">ex: kaushik,..</string>
     <string name="ex_5">ex: 5,..</string>
     <string name="confirm">CONFIRM</string>
-    <string name="ex_yyyy_mm_dd">ex: YYYY/MM/dd</string>
+    <string name="ex_yyyy_mm_dd">ex: yyyy/MM/dd</string>
     <string name="task">Task</string>
     <string name="assigndev">Assign Dev</string>
     <string name="update">Update</string>
@@ -46,5 +46,9 @@
     <string name="are_you_sure_you_want_to_delete_the_task">Are you sure you want to delete the task?</string>
     <string name="gantt_chart">Project Plan</string>
     <string name="exit_btn">Exit button</string>
+    <string name="from_date">From:</string>
+    <string name="calendar_fromdate">From date</string>
+    <string name="to_date">To:</string>
+    <string name="filter">Filter</string>
     />
 </resources>
