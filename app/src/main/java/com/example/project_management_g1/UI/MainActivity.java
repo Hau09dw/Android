@@ -74,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
     private Task_Adapter taskAdapter;
     private TaskDAO taskDAO;
     private List<Task> taskList;
+    private  List<Task> assigneeList;
     private SearchView searchView;
     private FloatingActionButton fab;
     private ImageView cancelButton;
@@ -163,8 +164,7 @@ public class MainActivity extends AppCompatActivity {
         sortTaskname();
 
         if (taskList.isEmpty()) {
-            taskAdapter = new Task_Adapter(taskList);
-            rcvTask.setAdapter(taskAdapter);
+
             Toast.makeText(this, "There is no data to display", Toast.LENGTH_SHORT).show();
         }else {
 
@@ -646,10 +646,13 @@ public class MainActivity extends AppCompatActivity {
     //check assginee
     private boolean checkAssignee(final EditText editText, Task currentTask){
         boolean  isUpdating = (currentTask != null);
+        assigneeList = new ArrayList<Task>();
         for(Task task : taskList){
             if(task.getAssignee().equalsIgnoreCase(editText.getText().toString().trim()))
-                if(!isUpdating || !task.equals(currentTask))
+                if(!isUpdating || !task.equals(currentTask)){
+                    assigneeList.add(task);
                     return true;
+                }
         }
         return false;
     }
@@ -685,15 +688,19 @@ public class MainActivity extends AppCompatActivity {
     }
     //check overlap
     public boolean checkOverLap(final Task task){
+
+
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd", Locale.getDefault());
-        for(Task taskex : taskList){
+        for(Task taskex : assigneeList){
             try{
                 Date startcheck = simpleDateFormat.parse(task.getStartdate().trim());
                 Date endcheck = simpleDateFormat.parse(task.getEnddate().trim());
                 Date startdateonlist = simpleDateFormat.parse(taskex.getStartdate().trim());
                 Date enddateonlist = simpleDateFormat.parse(taskex.getEnddate().trim());
-                if(taskex != task && !(startcheck.after(enddateonlist) || endcheck.before(startdateonlist)))
+                if(taskex != task && !(startcheck.after(enddateonlist) || endcheck.before(startdateonlist))){
+                    assigneeList.clear();
                     return true;
+                }
 
             }catch(ParseException e){
                 e.printStackTrace();

@@ -26,7 +26,7 @@ public class Task_Adapter  extends RecyclerView.Adapter<Task_Adapter.TaskViewHol
     public void setOnItemClickListener(OnItemClickListener listener) {
         this.listener = listener;
     }
-    // call back toi main: xem lua chon fab nao
+    // call back toi main: xem lua chon afb nao
     public interface OnSelectModeChangeListener {
         void onSelectModeChanged(boolean isSelectMode);
     }

@@ -58,14 +58,13 @@
                     android:layout_height="35dp"
                     android:layout_margin="9dp"
                     android:background="@drawable/ic_custom_search"
+                    app:iconifiedByDefault="false"
                     app:layout_constraintBottom_toBottomOf="@+id/id_home_title"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="1.0"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/editText"
-                    app:queryHint="Search..."
-                    app:iconifiedByDefault="false"
-                    />
+                    app:layout_constraintVertical_bias="0.542"
+                    app:queryHint="Search..." />
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>
