@@ -131,13 +131,12 @@ public class GanttChartActivity extends AppCompatActivity {
     }
 
     private void ganttIniSetups(Resource ChartInstance) {
-        ChartInstance.zoomLevel(1d)
+        ChartInstance.zoomLevel(1)
                 .timeTrackingMode(TimeTrackingMode.AVAILABILITY_PER_CHART);
-
-        ChartInstance.resourceListWidth(120);
-
+        ChartInstance.resourceListWidth(90);
+        //to-from: maximum hours to work in a day, if exceeds, mark with red warning
         ChartInstance.calendar().availabilities(new Availability[] {
-                new Availability(AvailabilityPeriod.DAY, (Double) null, 10d, true, (Double) null, (Double) null, 18d),
+                new Availability(AvailabilityPeriod.DAY, (Double) null, 0, true, (Double) null, (Double) null,2),
                 new Availability(AvailabilityPeriod.DAY, (Double) null, 14d, false, (Double) null, (Double) null, 15d),
                 new Availability(AvailabilityPeriod.WEEK, (Double) null, (Double) null, false, 5d, (Double) null, 18d),
                 new Availability(AvailabilityPeriod.WEEK, (Double) null, (Double) null, false, 6d, (Double) null, 18d)
