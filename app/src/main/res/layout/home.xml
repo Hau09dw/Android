@@ -65,7 +65,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/editText"
                     app:layout_constraintVertical_bias="0.542"
-                    app:queryHint="Search..." />
+                    app:queryHint="@string/search" />
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>

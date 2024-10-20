@@ -2,7 +2,7 @@
     <string name="app_name">Project plan</string>
     <string name="home_title">Project plan</string>
     <string name="task_name">TASK NAME</string>
-    <string name="search">Search...</string>
+    <string name="search">Search…</string>
     <string name="assignee">Assignee</string>
     <string name="startdate">Start date</string>
     <string name="estimate_day">Estimate day</string>
@@ -26,11 +26,11 @@
     <string name="assigndev">Assign Dev</string>
     <string name="update">Update</string>
     <string name="create">Create</string>
-    <string name="calendar_enddate">calendar endDate</string>
-    <string name="calendar_startdate">Calendar startDate</string>
-    <string name="itemselection_assignee">ItemSelection_Assignee</string>
-    <string name="itemslection_taskname">ItemSlection taskName</string>
-    <string name="item_spinner">item_spinner</string>
+    <string name="calendar_enddate" translatable="false">calendar endDate</string>
+    <string name="calendar_startdate" translatable="false">Calendar startDate</string>
+    <string name="itemselection_assignee" translatable="false">ItemSelection_Assignee</string>
+    <string name="itemslection_taskname" translatable="false">ItemSlection taskName</string>
+    <string name="item_spinner" translatable="false">item_spinner</string>
     <string name="warning">Warning!</string>
     <string name="content">content</string>
     <string name="done">DONE</string>

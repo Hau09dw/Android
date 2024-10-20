@@ -21,7 +21,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
-            android:paddingBottom="13dp"
+            android:paddingBottom="5dp"
             android:text="@string/gantt_chart"
             android:textColor="@color/design_default_color_secondary_variant"
             android:textSize="30sp"
@@ -39,8 +39,7 @@
             android:id="@+id/exit_btn_gantt"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="center|end"
-            android:layout_marginStart="60dp"
+            android:layout_gravity="center"
             android:contentDescription="@string/exit_btn"
             android:onClick="exitGanttChart"
             android:scaleType="fitEnd"
@@ -57,6 +56,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:baselineAligned="false"
             android:divider="@android:drawable/status_bar_item_app_background"
             android:orientation="horizontal">
 
