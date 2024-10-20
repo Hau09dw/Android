@@ -164,7 +164,8 @@ public class MainActivity extends AppCompatActivity {
         sortTaskname();
 
         if (taskList.isEmpty()) {
-
+            taskAdapter = new Task_Adapter(taskList);
+            rcvTask.setAdapter(taskAdapter);
             Toast.makeText(this, "There is no data to display", Toast.LENGTH_SHORT).show();
         }else {
 
