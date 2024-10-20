@@ -11,7 +11,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/ic_gradient_background"
+        android:background="@drawable/ic_gradient_background_gantt"
         android:elevation="5dp"
         android:orientation="horizontal"
         android:padding="15dp">
@@ -51,6 +51,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/white"
         android:orientation="vertical">
 
         <LinearLayout

@@ -59,6 +59,7 @@
                     android:layout_margin="9dp"
                     android:background="@drawable/ic_custom_search"
                     app:iconifiedByDefault="false"
+                    app:searchIcon="@android:drawable/ic_search_category_default"
                     app:layout_constraintBottom_toBottomOf="@+id/id_home_title"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
