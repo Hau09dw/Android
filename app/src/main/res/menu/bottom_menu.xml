@@ -3,11 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/bottom_home_id"
-        android:title="Home"
+        android:title="@string/home"
         android:icon="@drawable/home" />
     <item
         android:id="@+id/bottom_sort_id"
-        android:title="Sort"
+        android:title="@string/sort"
         android:icon="@drawable/sort"/>
 
     <item
@@ -17,11 +17,11 @@
 
     <item
         android:id="@+id/bottom_setting_id"
-        android:title="Setting"
+        android:title="@string/setting"
         android:icon="@drawable/setting" />
     <item
         android:id="@+id/bottom_ganttchart_id"
-        android:title="Gantt Chart"
+        android:title="@string/menu_gantt_chart"
         android:icon="@drawable/ganttchart" />
 
 </menu>

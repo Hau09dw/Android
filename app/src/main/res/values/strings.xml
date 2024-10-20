@@ -52,5 +52,7 @@
     <string name="filter">Filter</string>
     <string name="hide">Hide</string>
     <string name="show">Show</string>
+    <string name="sort">Sort</string>
+    <string name="menu_gantt_chart">Gantt</string>
     />
 </resources>

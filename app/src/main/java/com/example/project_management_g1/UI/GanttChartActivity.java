@@ -46,7 +46,12 @@ public class GanttChartActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.gantt_chart_view);
+        handleMusicBinding();
         ganttLogic();
+    }
+
+    private void handleMusicBinding() {
+
     }
 
     public void ganttLogic() {
