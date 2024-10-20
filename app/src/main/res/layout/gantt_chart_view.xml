@@ -58,10 +58,11 @@
         <LinearLayout
             android:id="@+id/layout_from_date"
             android:layout_width="match_parent"
-            android:layout_height="100dp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:orientation="vertical"
-            android:padding="10dp">
+            android:paddingStart="15dp"
+            android:paddingEnd="15dp">
 
             <TextView
                 android:id="@+id/lbl_fromDate"
@@ -79,7 +80,7 @@
                 <EditText
                     android:id="@+id/txt_fromDate"
                     android:layout_width="0dp"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:background="@drawable/ic_custom_create_edittext"
                     android:enabled="false"
                     android:hint="@string/ex_yyyy_mm_dd"
@@ -97,12 +98,16 @@
 
                 <ImageButton
                     android:id="@+id/btn_fromDate"
-                    android:layout_width="0dp"
+                    style="@style/Widget.AppCompat.ImageButton"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:backgroundTint="#F62978"
+                    android:backgroundTintMode="src_over"
                     android:contentDescription="@string/calendar_fromdate"
+                    android:padding="1dp"
+                    android:scaleType="center"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
                     app:srcCompat="@drawable/calendar" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -113,10 +118,12 @@
         <LinearLayout
             android:id="@+id/layout_to_date"
             android:layout_width="match_parent"
-            android:layout_height="100dp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:orientation="vertical"
-            android:padding="10dp">
+            android:padding="0dp"
+            android:paddingStart="15dp"
+            android:paddingEnd="15dp">
 
             <TextView
                 android:id="@+id/lbl_toDate"
@@ -134,7 +141,7 @@
                 <EditText
                     android:id="@+id/txt_toDate"
                     android:layout_width="0dp"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:background="@drawable/ic_custom_create_edittext"
                     android:enabled="false"
                     android:hint="@string/ex_yyyy_mm_dd"
@@ -154,7 +161,10 @@
                     android:id="@+id/btn_toDate"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:backgroundTint="#F62978"
+                    android:backgroundTintMode="src_over"
                     android:contentDescription="@string/calendar_fromdate"
+                    android:padding="1dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -165,14 +175,38 @@
 
         </LinearLayout>
 
-        <Button
-            android:id="@+id/btn_filter"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:text="@string/filter">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-        </Button>
+
+            <Button
+                android:id="@+id/btn_hide"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="30dp"
+                android:minWidth="45dip"
+                android:minHeight="25dip"
+                android:text="@string/hide"
+                android:textAlignment="center"
+                android:textSize="10sp">
+
+            </Button>
+
+            <Button
+                android:id="@+id/btn_filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="30dp"
+                android:minWidth="45dip"
+                android:minHeight="25dip"
+                android:text="@string/filter"
+                android:textSize="10sp">
+
+            </Button>
+        </RelativeLayout>
     </LinearLayout>
 
     <ProgressBar
