@@ -36,14 +36,20 @@ public class GanttChartActivity extends AppCompatActivity {
     ImageButton btn_toDate;
     EditText txt_fromDate;
     EditText txt_toDate;
-    Button btn_filter;
+    Button btn_filter,btn_hide;
     Resource gantt_chart;
     AnyChartView ganttChart;
+
+    boolean hideDialog = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.gantt_chart_view);
+        ganttLogic();
+    }
+
+    public void ganttLogic() {
         //Initialize variables and get data from DB
         TaskDAO taskDAO = new TaskDAO(this);
 
@@ -58,7 +64,10 @@ public class GanttChartActivity extends AppCompatActivity {
         btn_toDate = findViewById(R.id.btn_toDate);
         txt_fromDate = findViewById(R.id.txt_fromDate);
         txt_toDate = findViewById(R.id.txt_toDate);
+
         btn_filter = findViewById(R.id.btn_filter);
+        btn_hide = findViewById(R.id.btn_hide);
+
         gantt_chart = AnyChart.resource();
 
         txt_fromDate.setFocusable(false);
@@ -77,18 +86,24 @@ public class GanttChartActivity extends AppCompatActivity {
             addDataToGanttChart(filtered_data);
             gantt_chart.data(filtered_data);
         });
-        //gantt chart Setups
-        gantt_chart.zoomLevel(1d)
-                .timeTrackingMode(TimeTrackingMode.AVAILABILITY_PER_CHART);
-
-        gantt_chart.resourceListWidth(120);
-
-        gantt_chart.calendar().availabilities(new Availability[] {
-                new Availability(AvailabilityPeriod.DAY, (Double) null, 10d, true, (Double) null, (Double) null, 18d),
-                new Availability(AvailabilityPeriod.DAY, (Double) null, 14d, false, (Double) null, (Double) null, 15d),
-                new Availability(AvailabilityPeriod.WEEK, (Double) null, (Double) null, false, 5d, (Double) null, 18d),
-                new Availability(AvailabilityPeriod.WEEK, (Double) null, (Double) null, false, 6d, (Double) null, 18d)
+        btn_hide.setOnClickListener(v -> {
+            if(!hideDialog){
+                findViewById(R.id.layout_from_date).setVisibility(View.GONE);
+                findViewById(R.id.layout_to_date).setVisibility(View.GONE);
+                btn_filter.setVisibility(View.GONE);
+                btn_hide.setText(R.string.show);
+                hideDialog = true;
+            }
+            else {
+                findViewById(R.id.layout_from_date).setVisibility(View.VISIBLE);
+                findViewById(R.id.layout_to_date).setVisibility(View.VISIBLE);
+                btn_filter.setVisibility(View.VISIBLE);
+                btn_hide.setText(R.string.hide);
+                hideDialog = false;
+            }
         });
+        //gantt chart Setups
+        ganttIniSetups(gantt_chart);
         //Initialize data for chart
         List<DataEntry> data = new ArrayList<>();
 
@@ -100,11 +115,25 @@ public class GanttChartActivity extends AppCompatActivity {
         ganttChart.setChart(gantt_chart);
     }
 
+    private void ganttIniSetups(Resource ChartInstance) {
+        ChartInstance.zoomLevel(1d)
+                .timeTrackingMode(TimeTrackingMode.AVAILABILITY_PER_CHART);
+
+        ChartInstance.resourceListWidth(120);
+
+        ChartInstance.calendar().availabilities(new Availability[] {
+                new Availability(AvailabilityPeriod.DAY, (Double) null, 10d, true, (Double) null, (Double) null, 18d),
+                new Availability(AvailabilityPeriod.DAY, (Double) null, 14d, false, (Double) null, (Double) null, 15d),
+                new Availability(AvailabilityPeriod.WEEK, (Double) null, (Double) null, false, 5d, (Double) null, 18d),
+                new Availability(AvailabilityPeriod.WEEK, (Double) null, (Double) null, false, 6d, (Double) null, 18d)
+        });
+    }
+
     private void addDataToGanttChart(List<DataEntry> data) {
         //Loop through the list of tasks and add them to the chart
         for (Task task : taskList) {
             String dev = task.getAssignee();
-            //Format the dates's String to match the functions
+            //Format the date's String to match the functions
             String startDate = formatDate(task.getStartdate());
             String endDate = formatDate(task.getEnddate());
 
@@ -192,11 +221,9 @@ public class GanttChartActivity extends AppCompatActivity {
         Date dateFrom = convertStringToDate(fromDate);
         Date dateTo = convertStringToDate(toDate);
 
-        if(!validateInput(dateFrom, dateTo))
+        if(!validateInput(dateFrom, dateTo) || taskList.isEmpty())
             return;
         if(!fromDate.isEmpty() && !toDate.isEmpty()){
-            if(taskList.size()<=0)
-                return;
             List<Task> copy =  new ArrayList<>(taskList);
             for (Task task : taskList) {
                 Date startDate = convertStringToDate(task.getStartdate());
@@ -236,7 +263,12 @@ public class GanttChartActivity extends AppCompatActivity {
         }
     }
 
-    //Format the dates's String to match the functions
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+    //Format the date's String to match the functions
     //ex: Input: 2024/02/27 Output: 2024-02-27
     private String formatDate(String date) {
         return date.replace("/", "-");

@@ -50,5 +50,7 @@
     <string name="calendar_fromdate">From date</string>
     <string name="to_date">To:</string>
     <string name="filter">Filter</string>
+    <string name="hide">Hide</string>
+    <string name="show">Show</string>
     />
 </resources>

@@ -880,5 +880,15 @@ public class MainActivity extends AppCompatActivity {
     private void showGanttChart() {
         Intent intent = new Intent(this, GanttChartActivity.class);
         startActivity(intent);
+//        final Dialog dialog = new Dialog(this);
+//        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+//        dialog.setContentView(R.layout.gantt_chart_view);
+//        dialog.setCanceledOnTouchOutside(true);
+//
+//        dialog.show();
+//
+//        cancelButton = dialog.findViewById(R.id.exit_btn_gantt);
+//        cancelButton.setOnClickListener(view -> dialog.dismiss());
+
     }
 }
