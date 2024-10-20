@@ -54,5 +54,6 @@
     <string name="show">Show</string>
     <string name="sort">Sort</string>
     <string name="menu_gantt_chart">Gantt</string>
+    <string name="click_text_warning">Choose calendar icon \nto input date</string>
     />
 </resources>

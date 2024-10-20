@@ -191,6 +191,10 @@ public class GanttChartActivity extends AppCompatActivity {
         this.finish();
     }
 
+    public void txtDateInfo(View view) {
+        Toast.makeText(this, R.string.click_text_warning, Toast.LENGTH_SHORT).show();
+    }
+
     //name: Developer's name
     //description: Developer's description - Default to "Developer"
     //activities: list of activities/Timeline details (Can have many activities here)
