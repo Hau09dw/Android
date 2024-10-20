@@ -1,6 +1,11 @@
 package com.example.project_management_g1.UI;
 
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -41,6 +46,8 @@ public class GanttChartActivity extends AppCompatActivity {
     AnyChartView ganttChart;
 
     boolean hideDialog = false;
+    Boolean isPlaying = false;
+    private BackgroundMusicService musicService;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -51,7 +58,10 @@ public class GanttChartActivity extends AppCompatActivity {
     }
 
     private void handleMusicBinding() {
-
+        // Bind to the service
+        Intent intent = getIntent();
+        isPlaying = intent.getBooleanExtra("music", false);
+        bindService(new Intent(this, BackgroundMusicService.class), connection, Context.BIND_AUTO_CREATE);
     }
 
     public void ganttLogic() {
@@ -277,6 +287,43 @@ public class GanttChartActivity extends AppCompatActivity {
     //ex: Input: 2024/02/27 Output: 2024-02-27
     private String formatDate(String date) {
         return date.replace("/", "-");
+    }
+
+    public ServiceConnection connection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName className, IBinder service) {
+            BackgroundMusicService.LocalBinder binder = (BackgroundMusicService.LocalBinder) service;
+            musicService = binder.getService();
+            // Check saved state and play music if it was on
+            if (isPlaying) {
+                musicService.playMusic();
+            }
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName arg0) {
+            if (isPlaying) {
+                musicService.pauseMusic();
+            }
+        }
+    };
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if ( musicService.isPlaying()) {
+            musicService.pauseMusic();
+        }
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(musicService != null)
+        {
+            if (!musicService.isPlaying() && isPlaying) {
+                musicService.playMusic();
+            }
+        }
     }
 }
 

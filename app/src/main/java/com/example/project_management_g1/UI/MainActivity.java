@@ -64,12 +64,12 @@ import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
-    private static final String PREFS_NAME = "app_preferences";
+    public static final String PREFS_NAME = "app_preferences";
     private static final String KEY_SHOW_QUESTION = "show_question_dialog";
     private static final String KEY_SHOW_QUESTION_SELECT = "show_question_select_dialog";
     private static final String KEY_ESTIMATEDAY = "key_estimateday";
     private static final String KEY_SORT = "key_sort";
-    private static final String MUSIC_STATE = "MusicState";
+    public static final String MUSIC_STATE = "MusicState";
     private RecyclerView rcvTask;
     private Task_Adapter taskAdapter;
     private TaskDAO taskDAO;
@@ -760,7 +760,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // Settings Task
-    private ServiceConnection connection = new ServiceConnection() {
+    public ServiceConnection connection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName className, IBinder service) {
             BackgroundMusicService.LocalBinder binder = (BackgroundMusicService.LocalBinder) service;
@@ -826,7 +826,7 @@ public class MainActivity extends AppCompatActivity {
         }
         dialog.show();
     }
-    private boolean getMusicState() {
+    public boolean getMusicState() {
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
         return settings.getBoolean(MUSIC_STATE, false); // false is the default value
     }
@@ -886,6 +886,7 @@ public class MainActivity extends AppCompatActivity {
     }
     private void showGanttChart() {
         Intent intent = new Intent(this, GanttChartActivity.class);
+        intent.putExtra("music", getMusicState());
         startActivity(intent);
 //        final Dialog dialog = new Dialog(this);
 //        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
