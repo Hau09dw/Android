@@ -39,8 +39,8 @@
     <string name="question">Question?</string>
     <string name="don_t_show_again">Don\'t show again</string>
     <string name="fab">fab</string>
-    <string name="turn_on_off_estimate_day">Turn on/off Estimate Day</string>
-    <string name="turn_on_off_music">Turn on/off Music</string>
+    <string name="turn_on_off_estimate_day">Hide/Display Estimate Day</string>
+    <string name="turn_on_off_music">Turn off/on Music</string>
     <string name="cancel_button">cancel button</string>
     <string name="delete">Delete</string>
     <string name="are_you_sure_you_want_to_delete_the_task">Are you sure you want to delete the task?</string>
