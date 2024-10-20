@@ -86,7 +86,6 @@ public class MainActivity extends AppCompatActivity {
     EditText txt_taskname, txt_assignee, txt_estimaday, txt_startdate, txt_enddate;
     ImageButton btnStartdate, btnEnddate;
     Button btn_confirm;
-    TextView estimateDay;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -164,6 +163,8 @@ public class MainActivity extends AppCompatActivity {
         sortTaskname();
 
         if (taskList.isEmpty()) {
+            taskAdapter = new Task_Adapter(taskList);
+            rcvTask.setAdapter(taskAdapter);
             Toast.makeText(this, "There is no data to display", Toast.LENGTH_SHORT).show();
         }else {
 
