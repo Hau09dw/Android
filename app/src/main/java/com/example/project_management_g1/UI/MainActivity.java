@@ -47,7 +47,8 @@ import com.example.project_management_g1.DATA.TaskDAO;
 import com.example.project_management_g1.MODEL.ClickDebouncer;
 import com.example.project_management_g1.MODEL.Task;
 import com.example.project_management_g1.MODEL.Task_Adapter;
-import com.example.project_management_g1.MODEL.setInputEstimateDay;
+import com.example.project_management_g1.MODEL.setInputEstimateDayCreate;
+import com.example.project_management_g1.MODEL.setInputEstimateDayUpdate;
 import com.example.project_management_g1.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -423,8 +424,7 @@ public class MainActivity extends AppCompatActivity {
         //constrain
         constrainStartAndEndDate(txt_startdate,txt_enddate,txt_estimaday,1);
         constrainStartAndEndDate(txt_enddate,txt_startdate,txt_estimaday,2);
-        txt_estimaday.setEnabled(false);
-
+        setInputEstimateDayUpdate.setNonNagativeIntegerInput(txt_estimaday, txt_startdate, txt_enddate);
         btn_confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -531,7 +531,7 @@ public class MainActivity extends AppCompatActivity {
         });
         constrainStartAndEndDate(txt_startdate, txt_enddate, txt_estimaday, 1);
         constrainStartAndEndDate(txt_enddate, txt_startdate, txt_estimaday, 2);
-        setInputEstimateDay.setNonNagativeIntegerInput(txt_estimaday, txt_startdate, txt_enddate);
+        setInputEstimateDayCreate.setNonNagativeIntegerInput(txt_estimaday, txt_startdate, txt_enddate);
         //xu ly button
         btn_confirm.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -727,7 +727,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else return -1;
             }
-        }catch(ParseException e){
+            }catch(ParseException e){
             e.printStackTrace();
         }
 

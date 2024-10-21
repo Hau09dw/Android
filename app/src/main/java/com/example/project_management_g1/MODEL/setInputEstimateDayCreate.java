@@ -5,12 +5,13 @@ import android.text.InputFilter;
 import android.text.Spanned;
 import android.text.TextWatcher;
 import android.widget.EditText;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-public class setInputEstimateDay {
+public class setInputEstimateDayCreate {
     public static void setNonNagativeIntegerInput(EditText estimateDay,EditText startDate, EditText endDate){
         estimateDay.setFilters(new InputFilter[]{
                  new InputFilter() {
@@ -57,7 +58,7 @@ public class setInputEstimateDay {
                     if(!txt.isEmpty() && estimateDay.isEnabled()) {
                         int i = Integer.parseInt(txt);
 
-                        set_SE_DatePicker(i,startDate,endDate);
+                        set_create_DatePicker(i,startDate,endDate);
                     }else if(txt.isEmpty() && estimateDay.isEnabled()){
                         startDate.setText("");
                         endDate.setText("");
@@ -65,7 +66,7 @@ public class setInputEstimateDay {
              }
          });
     }
-    private static void set_SE_DatePicker(int i,EditText start, EditText end){
+    private static void set_create_DatePicker(int i,EditText start, EditText end){
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd", Locale.getDefault());
         try{
             //lay ngay hien tai cho startDate
@@ -82,4 +83,5 @@ public class setInputEstimateDay {
             e.printStackTrace();
         }
     }
+
 }
