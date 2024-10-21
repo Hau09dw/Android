@@ -87,6 +87,7 @@ public class MainActivity extends AppCompatActivity {
     EditText txt_taskname, txt_assignee, txt_estimaday, txt_startdate, txt_enddate;
     ImageButton btnStartdate, btnEnddate;
     Button btn_confirm;
+    TextView estimadayy;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -135,6 +136,7 @@ public class MainActivity extends AppCompatActivity {
     private void initializeViews() {
         taskDAO = new TaskDAO(this);
         rcvTask = findViewById(R.id.id_recyclerview);
+        estimadayy = findViewById(R.id.textView5);
         fab = findViewById(R.id.fab);
         searchView = findViewById(R.id.action_search);
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
@@ -149,7 +151,10 @@ public class MainActivity extends AppCompatActivity {
         preferences.edit().putBoolean(KEY_SORT,true).apply();
         preferences.edit().putBoolean(KEY_SHOW_QUESTION_SELECT,true).apply();
         preferences.edit().putBoolean(KEY_SHOW_QUESTION,true).apply();
-
+        boolean isEstimateDay = preferences.getBoolean(KEY_ESTIMATEDAY,true);
+        if(isEstimateDay){
+            estimadayy.setVisibility(View.VISIBLE);
+        }else estimadayy.setVisibility(View.INVISIBLE);
         setupRecyclerView();
         SearchTask();
         setupSwipeToDelete();
@@ -418,7 +423,7 @@ public class MainActivity extends AppCompatActivity {
         //constrain
         constrainStartAndEndDate(txt_startdate,txt_enddate,txt_estimaday,1);
         constrainStartAndEndDate(txt_enddate,txt_startdate,txt_estimaday,2);
-        setInputEstimateDay.setNonNagativeIntegerInput(txt_estimaday,txt_startdate,txt_enddate);
+        txt_estimaday.setEnabled(false);
 
         btn_confirm.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -878,7 +883,11 @@ public class MainActivity extends AppCompatActivity {
         boolean isVisible = preferences.getBoolean(KEY_ESTIMATEDAY,true);
         if (taskAdapter != null) {
             taskAdapter.setShowEstimateDay(isVisible);
+
         }
+        if(isVisible){
+            estimadayy.setVisibility(View.VISIBLE);
+        }else estimadayy.setVisibility(View.INVISIBLE);
     }
 
     // Helper method to get the view for a specific position
