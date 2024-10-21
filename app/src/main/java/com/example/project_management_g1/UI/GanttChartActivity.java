@@ -259,11 +259,11 @@ public class GanttChartActivity extends AppCompatActivity {
 
     private boolean validateInput(Date dateFrom, Date dateTo) {
         if(dateFrom == null || dateTo == null){
-            Toast.makeText(this, "Null date or can't parse date", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.null_date_or_can_t_parse_date, Toast.LENGTH_SHORT).show();
             return false;
         }
         if(dateFrom.compareTo(dateTo) > 0){
-            Toast.makeText(this, "Invalid date", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.invalid_date, Toast.LENGTH_LONG).show();
             txt_fromDate.setText("");
             txt_toDate.setText("");
             return false;

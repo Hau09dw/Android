@@ -37,7 +37,7 @@
     <string name="done">XONG</string>
     <string name="warningg">cảnh báo</string>
     <string name="ok">OK</string>
-    <string name="question">Thắc mắc?</string>
+    <string name="question">Cảnh báo!</string>
     <string name="don_t_show_again">Không hiện lại</string>
     <string name="fab">fab</string>
     <string name="turn_on_off_estimate_day">Ẩn/Hiện Chi Tiết</string>
@@ -56,4 +56,17 @@
     <string name="sort">Sắp xếp</string>
     <string name="menu_gantt_chart">Gantt</string>
     <string name="click_text_warning">Ấn icon lịch để nhập ngày</string>
+    <string name="causes_an_overlap_to_other_tasks_when_updating_at">" đang bị trùng với task khác tại thời điểm: "</string>
+    <string name="is_required">" cần được nhập!"</string>
+    <string name="no_data_found">Không có dữ liệu</string>
+    <string name="are_you_sure_you_want_to_delete_the_selected_tasks">Bạn có chắc muốn xóa task được chọn?</string>
+    <string name="delete_task">Xóa task</string>
+    <string name="failed_to_delete_task">Xóa thất bại</string>
+    <string name="failed_to_updated_task">Cập nhật thất bại</string>
+    <string name="failed_to_create_task_2">Tạo thất bại - 2</string>
+    <string name="failed_to_create_task_1">Tạo thất bại - 1</string>
+    <string name="task_name_already_exists_in_the_list">Tên đã tồn tại!</string>
+    <string name="an_error_occurred_while_loading_data">Lỗi khi tải dữ liệu</string>
+    <string name="null_date_or_can_t_parse_date">Ngày đang trống hoặc định dạng lỗi</string>
+    <string name="invalid_date">Khoảng thời gian không đúng</string>
 </resources>

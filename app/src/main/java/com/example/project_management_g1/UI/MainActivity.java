@@ -104,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
         try {
             loadTasks();
         } catch (Exception e) {
-            Toast.makeText(this, "An error occurred while loading data", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.an_error_occurred_while_loading_data), Toast.LENGTH_SHORT).show();
         }
 
         //Music Service
@@ -271,7 +271,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         if(filteredListTask.isEmpty()){
-            Toast.makeText(this,"No data found",Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.no_data_found),Toast.LENGTH_SHORT).show();
         }else{
             taskAdapter.setFilteredList(filteredListTask);
         }
@@ -349,9 +349,9 @@ public class MainActivity extends AppCompatActivity {
                 ImageView imageView = dialog.findViewById(R.id.image_warning);
                 TextView title_content = dialog.findViewById(R.id.title_warning);
                 imageView.setImageResource(R.drawable.deleteicon);
-                title_content.setText("Delete task");
+                title_content.setText(R.string.delete_task);
                 title_content.setTextColor(Color.RED);
-                txtContent.setText("Are you sure you want to delete the selected tasks?");
+                txtContent.setText(R.string.are_you_sure_you_want_to_delete_the_selected_tasks);
                 btnDone.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -386,7 +386,7 @@ public class MainActivity extends AppCompatActivity {
             taskDAO.deleteTask(task);
             loadTasks();
         } else
-            Toast.makeText(MainActivity.this, "Failed to delete task", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, getString(R.string.failed_to_delete_task), Toast.LENGTH_SHORT).show();
     }
 
     //event update task(CRUD)
@@ -450,7 +450,7 @@ public class MainActivity extends AppCompatActivity {
                         }
 
                     } else
-                        Toast.makeText(dialog.getContext(), "Failed to updated task", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(dialog.getContext(), getString(R.string.failed_to_updated_task), Toast.LENGTH_SHORT).show();
                     dialog.dismiss();
                 }
             }
@@ -560,9 +560,9 @@ public class MainActivity extends AppCompatActivity {
                             dialog.dismiss();
                         }
                     } else
-                        Toast.makeText(dialog.getContext(), "Failed to create task(2)", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(dialog.getContext(), getString(R.string.failed_to_create_task_2), Toast.LENGTH_SHORT).show();
                 } else
-                    Toast.makeText(dialog.getContext(), "Failed to create task(1)", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(dialog.getContext(), getString(R.string.failed_to_create_task_1), Toast.LENGTH_SHORT).show();
             }
         });
          btnStartdate.setOnClickListener(new View.OnClickListener() {
@@ -640,7 +640,7 @@ public class MainActivity extends AppCompatActivity {
         for (Task task : taskList) {
             if (task.getTask_name().equalsIgnoreCase(newTaskName)) {
                 if (!isUpdating || !task.equals(currentTask)) {
-                    editText.setError("Task name already exists in the list");
+                    editText.setError(getString(R.string.task_name_already_exists_in_the_list));
                     editText.requestFocus();
                     return false;
                 }
@@ -674,8 +674,9 @@ public class MainActivity extends AppCompatActivity {
         // Set up date time
         SimpleDateFormat outputDateTime = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault());
         String formatDateTime = outputDateTime.format(new Date());
-
-        txtContent.setText("Task " + taskName + " causes an overlap to other tasks when updating at " + formatDateTime);
+        String txt1 = getString(R.string.task);
+        String txt2 = getString(R.string.causes_an_overlap_to_other_tasks_when_updating_at);
+        txtContent.setText(txt1+" " + taskName + txt2 + formatDateTime);
 
         btnDone.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -757,8 +758,9 @@ public class MainActivity extends AppCompatActivity {
     }
     //kiem tra gia tri nhap vao
     private boolean validateInput(final EditText edittext, TextView textView){
+        String txt1 = getString(R.string.is_required);
         if(edittext.getText().toString().trim().isEmpty()){
-            edittext.setError(textView.getText().toString() + " is required!");
+            edittext.setError(textView.getText().toString() + txt1);
             edittext.requestFocus();
             return false;
         }

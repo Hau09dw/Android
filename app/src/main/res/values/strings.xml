@@ -36,7 +36,7 @@
     <string name="done">DONE</string>
     <string name="warningg">warning</string>
     <string name="ok">OK</string>
-    <string name="question">Question?</string>
+    <string name="question">Alert!</string>
     <string name="don_t_show_again">Don\'t show again</string>
     <string name="fab">fab</string>
     <string name="turn_on_off_estimate_day">Hide/Display Estimate Day</string>
@@ -55,5 +55,18 @@
     <string name="sort">Sort</string>
     <string name="menu_gantt_chart">Gantt</string>
     <string name="click_text_warning">Choose calendar icon \nto input date</string>
+    <string name="causes_an_overlap_to_other_tasks_when_updating_at">" causes an overlap to other tasks when updating at "</string>
+    <string name="is_required">" is required!"</string>
+    <string name="no_data_found">No data found</string>
+    <string name="are_you_sure_you_want_to_delete_the_selected_tasks">Are you sure you want to delete the selected tasks?</string>
+    <string name="delete_task">Delete task</string>
+    <string name="failed_to_delete_task">Failed to delete task</string>
+    <string name="failed_to_updated_task">Failed to updated task</string>
+    <string name="failed_to_create_task_2">Failed to create task(2)</string>
+    <string name="failed_to_create_task_1">Failed to create task(1)</string>
+    <string name="task_name_already_exists_in_the_list">Task name already exists in the list</string>
+    <string name="an_error_occurred_while_loading_data">An error occurred while loading data</string>
+    <string name="null_date_or_can_t_parse_date">Null date or can\'t parse date</string>
+    <string name="invalid_date">Invalid date</string>
     />
 </resources>
